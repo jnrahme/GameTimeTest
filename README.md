@@ -23,19 +23,28 @@ feature branch.
 These are not decorative mocks. They are generated from the working app and kept
 in the repo as review assets. Together they cover the main user paths from the
 take-home prompt: order history, filters/search, detail receipt, calendar
-sharing, and rotation-aware layout.
+sharing, and rotation-aware layout. These captures come from the native Expo app
+running in the iPhone 16 iOS Simulator, not from the web preview.
 
-| Order history | No-results search |
-| --- | --- |
-| ![GameTime order history list in portrait](docs/screenshots/order-history-list-portrait.png) | ![GameTime order history empty search state](docs/screenshots/order-history-empty-search.png) |
+**Share with Friends proof**
 
-| Past purchases filter | Receipt detail and share entry |
-| --- | --- |
-| ![GameTime order history past filter](docs/screenshots/order-history-past-filter.png) | ![GameTime order detail receipt and share action](docs/screenshots/order-detail-receipt-share.png) |
+![Native iOS GameTime Share with Friends CTA](docs/screenshots/order-detail-native-share-with-friends.png)
 
-| Calendar share confirmation | Landscape layout |
+| Native order history | Native no-results search |
 | --- | --- |
-| ![GameTime order detail calendar copied confirmation](docs/screenshots/order-detail-calendar-copied.png) | ![GameTime order history landscape layout](docs/screenshots/order-history-list-landscape.png) |
+| ![Native iOS GameTime order history list](docs/screenshots/order-history-native-portrait.png) | ![Native iOS GameTime order history empty search state](docs/screenshots/order-history-native-empty-search.png) |
+
+| Native past purchases filter | Native receipt and Share with Friends CTA |
+| --- | --- |
+| ![Native iOS GameTime order history past filter](docs/screenshots/order-history-native-past-filter.png) | ![Native iOS GameTime receipt detail with Share with Friends](docs/screenshots/order-detail-native-receipt-share.png) |
+
+| Native iOS share sheet | Native shared confirmation |
+| --- | --- |
+| ![Native iOS share sheet with generated calendar event text](docs/screenshots/order-detail-native-ios-share-sheet.png) | ![Native iOS GameTime detail after share completes](docs/screenshots/order-detail-native-shared-state.png) |
+
+| Native landscape layout |
+| --- |
+| ![Native iOS GameTime order history landscape layout](docs/screenshots/order-history-native-landscape.png) |
 
 ## Assessment Evidence
 
@@ -48,16 +57,17 @@ repo proves each one directly in the product surface, source, and tests.
 | Tapping a purchase opens a detail screen | The receipt detail screenshot shows the selected order path. Implementation: [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx) handles selection and back navigation; [OrderDetailScreen.tsx](src/features/orders/OrderDetailScreen.tsx) renders the detail view. |
 | Detail includes event name and information | The detail screen shows the event name, venue, date, category, confirmation, payment, and seats. Formatting is centralized in [formatters.ts](src/domain/orders/formatters.ts). |
 | Detail includes receipt with price breakdown | The receipt screenshot shows subtotal, fees, tax, discount when present, and total. Implementation: [ReceiptRow.tsx](src/components/ReceiptRow.tsx) and `getReceiptLineItems` in [formatters.ts](src/domain/orders/formatters.ts). |
-| Share with Friends generates a calendar event | The share confirmation screenshot shows the calendar flow after tapping the CTA. Implementation: [calendar.ts](src/domain/orders/calendar.ts) builds the ICS payload and [shareCalendar.ts](src/services/shareCalendar.ts) sends it to native/web share surfaces with clipboard fallback. |
+| Share with Friends generates a calendar event | The native receipt screenshot shows the CTA, the native iOS share sheet screenshot shows the generated event text, and the shared-state screenshot shows the completed action. Implementation: [calendar.ts](src/domain/orders/calendar.ts) builds the ICS payload and [shareCalendar.ts](src/services/shareCalendar.ts) sends it to native/web share surfaces with clipboard fallback. |
 | Simulate network calls with mock data | [ordersApi.ts](src/services/ordersApi.ts) simulates `GET /orders` and `GET /orders/:orderId` with latency, failure states, and Zod response validation from [schema.ts](src/domain/orders/schema.ts). |
-| Include test coverage | Tests cover selectors, formatting, calendar generation, mock API validation, controller states, list/detail UI, share fallback, and the app shell. Run `make verify` for TypeScript plus Jest coverage gates. |
+| Include test coverage | Tests cover selectors, formatting, calendar generation, mock API validation, query hooks, route containers, list/detail UI, share fallback, and the app shell. Run `make verify` for TypeScript plus Jest coverage gates. |
 
 ## Implementation Showcase
 
 Open the hosted implementation website at
 [jnrahme.github.io/GameTimeTest](https://jnrahme.github.io/GameTimeTest/).
-It explains the architecture, product tradeoffs, MCP/skills setup, AGENTS.md
-rules, quality gates, rotation-aware design decisions, and GitHub repo polish.
+It explains the architecture, product tradeoffs, AI/MCP setup, AGENTS.md rules,
+quality gates, rotation-aware design decisions, and GitHub repo polish in a
+reviewer-friendly format.
 
 ## Run Locally
 
@@ -89,14 +99,21 @@ thresholds: 95% statements, 95% lines, 90% functions, and 80% branches.
 
 ```mermaid
 flowchart TB
-  Prompt[Take-home prompt] --> Schema[Zod runtime schemas]
-  Schema --> Domain[Domain types, selectors, formatters]
-  Domain --> API[Mock orders API boundary]
-  API --> Controller[useOrdersController]
-  Controller --> List[FlashList order timeline]
-  Controller --> Detail[OrderDetailScreen]
+  App[App shell] --> Query[QueryClientProvider]
+  App --> SafeArea[Safe areas + error boundary]
+  Query --> Nav[React Navigation native stack]
+  Nav --> OrdersRoute[Orders route]
+  Nav --> DetailRoute[OrderDetail route with orderId param]
+  OrdersRoute --> OrdersContainer[OrdersListContainer]
+  DetailRoute --> DetailContainer[OrderDetailContainer]
+  OrdersContainer --> Queries[TanStack Query hooks]
+  DetailContainer --> Queries
+  Queries --> API[Mock orders API boundary]
+  API --> Schema[Zod runtime schemas]
+  Schema --> Domain[Domain selectors, formatters, calendar]
+  Domain --> List[FlashList order timeline]
+  Domain --> Detail[Receipt detail screen]
   Detail --> Share[ICS generation + native share]
-  App[App error boundary + safe areas] --> Controller
   Theme[GameTime design tokens] --> List
   Theme --> Detail
 ```
@@ -105,8 +122,15 @@ flowchart TB
   formatting, selectors, and calendar invite generation.
 - `src/services`: validated mock network boundary for `GET /orders` and
   `GET /orders/:orderId`, plus native/web share integration.
-- `src/features/orders`: screen-level state orchestration and mobile-first React
-  Native presentation with FlashList virtualization and pull-to-refresh.
+- `src/features/orders/navigation.ts`: typed routes plus deep-link readiness for
+  `gametime://orders` and `gametime://orders/:orderId`.
+- `src/features/orders/queries.ts`: TanStack Query server-state hooks for
+  caching, retry, loading, error, and refetch behavior.
+- `src/features/orders/*Container.tsx`: route-aware containers that compose
+  query state, local search/filter state, domain selectors, and screen props.
+- `src/features/orders/*Screen.tsx`: mobile-first React Native presentation with
+  FlashList virtualization, pull-to-refresh, native share flow, and rotation
+  support.
 - `src/components` and `src/theme`: reusable UI primitives, app error boundary,
   and semantic GameTime design tokens.
 
@@ -122,11 +146,44 @@ and responsive layouts that also hold up in Expo's web preview.
 flowchart LR
   Rules[AGENTS.md + Node 22] --> Build[Expo React Native implementation]
   Build --> Verify[make verify]
-  Verify --> Coverage[42 tests + coverage gate]
+  Verify --> Coverage[41 tests + coverage gate]
   Coverage --> ExpoCheck[make expo-check]
-  ExpoCheck --> Screens[Portrait + landscape screenshots]
+  ExpoCheck --> Screens[Native iOS portrait + landscape screenshots]
   Screens --> CI[GitHub Actions CI]
 ```
+
+## Architecture Decisions
+
+| Decision | Why it exists | Where to inspect |
+| --- | --- | --- |
+| Expo SDK 56 on Node 22 | Matches the current React Native stack while keeping setup repeatable with `nvm use`. | [.nvmrc](.nvmrc), [package.json](package.json), [app.json](app.json) |
+| React Navigation native stack | The prompt has two real screens. A navigator gives route params, Android hardware back, iOS swipe-back, and deep-link readiness without custom back-stack code. | [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx), [navigation.ts](src/features/orders/navigation.ts) |
+| TanStack Query for server state | Orders are fetched data with cache, retry, refetch, stale-time, loading, and error semantics. Query owns that; containers keep only local UI state. | [App.tsx](App.tsx), [queries.ts](src/features/orders/queries.ts) |
+| Containers separate behavior from rendering | Containers read routes and queries, derive filtered data, and pass plain props to screens. Screens stay testable and presentation-focused. | [OrdersListContainer.tsx](src/features/orders/OrdersListContainer.tsx), [OrderDetailContainer.tsx](src/features/orders/OrderDetailContainer.tsx) |
+| Zod at the mock API boundary | Mock data is treated like real backend data: it is validated before reaching the UI, and TypeScript types are inferred from the schemas. | [schema.ts](src/domain/orders/schema.ts), [ordersApi.ts](src/services/ordersApi.ts) |
+| FlashList for the timeline | Order history is a list surface that can grow. Virtualization is included now so the implementation scales beyond seed data. | [OrdersListScreen.tsx](src/features/orders/OrdersListScreen.tsx) |
+| Native share with web fallback | The primary experience is mobile. Web preview still behaves reasonably through `navigator.share` or clipboard fallback. | [calendar.ts](src/domain/orders/calendar.ts), [shareCalendar.ts](src/services/shareCalendar.ts) |
+
+## AI-Assisted Delivery Model
+
+Codex was used as an engineering assistant with explicit guardrails, not as a
+black-box generator:
+
+- `AGENTS.md` sets the project rules: Node 22, Expo SDK 56 docs before RN/Expo
+  changes, typed mock API boundaries, accessible mobile UI, and tests around
+  order and sharing behavior.
+- SmartAssist MCP was queried before architecture, edit, and git decisions per
+  the workspace protocol. The local SmartAssist data directory was missing, so
+  no memory lessons could be loaded or persisted; decisions fell back to the
+  repository, prompt, docs, and verification evidence.
+- Specialized Codex skills shaped the work: brainstorming for scope, React
+  Native best practices for mobile architecture, UI/UX guidance for the hosted
+  showcase, Playwright/browser checks for visual inspection, GitHub workflow
+  guidance for publishing, and verification-before-completion for evidence
+  before claims.
+- The final public artifacts are designed to be reviewable: screenshots from the
+  native iOS simulator, a hosted implementation page, CI, coverage gates, and
+  explicit architecture decision records.
 
 ## Professional Repo Surface
 
@@ -144,13 +201,16 @@ reviewer even opens the source:
 
 ## Tradeoffs
 
-- Navigation is local state instead of a routing library because the prompt needs
-  two screens, not deep linking; Android hardware back is still handled for the
-  detail view.
+- React Navigation is intentionally included even for two screens because the
+  detail view is route-addressable, deep-link-ready, and gets native back
+  behavior without custom state machinery.
+- TanStack Query is used for server state because it replaces hand-rolled
+  loading/error/refetch/cache behavior while keeping local search/filter state
+  simple and explicit in the list container.
 - Calendar sharing generates standards-friendly ICS content and uses native/web
   share APIs when available, with clipboard fallback on web.
 - Network calls are simulated with a mock API so the data boundary is easy to
   replace with a real backend.
-- Tests cover high-risk domain behavior, API validation, controller state,
-  sharing fallbacks, list/detail interactions, app shell behavior, and error
-  recovery.
+- Tests cover high-risk domain behavior, API validation, query hooks, route
+  containers, sharing fallbacks, list/detail interactions, app shell behavior,
+  and error recovery.

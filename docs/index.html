@@ -7,7 +7,7 @@
       name="description"
       content="A high-end implementation showcase for the GameTime order history React Native take-home."
     />
-    <link rel="icon" href="../assets/favicon.png" />
+    <link rel="icon" href="./favicon.png" />
     <title>GameTime Order History - Implementation Showcase</title>
     <style>
       :root {
@@ -121,7 +121,7 @@
       .hero::before {
         background:
           linear-gradient(90deg, rgba(1, 3, 20, 0.96), rgba(1, 3, 20, 0.78) 44%, rgba(1, 3, 20, 0.58)),
-          url("./screenshots/order-history-landscape.png") center / cover;
+          url("./screenshots/order-history-native-landscape.png") center / cover;
         content: "";
         inset: 0;
         position: absolute;
@@ -568,6 +568,11 @@
         padding: 20px;
       }
 
+      .grid + .code-strip,
+      .tool-grid + .code-strip {
+        margin-top: 18px;
+      }
+
       .code-strip b {
         color: var(--mint);
         font-weight: 800;
@@ -688,9 +693,10 @@
           <a href="#why">Why</a>
           <a href="#architecture">Architecture</a>
           <a href="#flow">Flow</a>
+          <a href="#decisions">Decisions</a>
           <a href="#quality">Quality</a>
           <a href="#repo">Repo</a>
-          <a href="#tooling">Tooling</a>
+          <a href="#tooling">AI Setup</a>
         </div>
       </nav>
 
@@ -701,27 +707,28 @@
             <h1>Built like a production GameTime mobile feature.</h1>
             <p class="hero-lede">
               This implementation turns a compact order-history prompt into a
-              brand-aligned, testable React Native experience with clear domain
-              boundaries, rotation-aware layouts, and a share-ready calendar flow.
+              brand-aligned React Native experience with real navigation,
+              server-state caching, runtime API validation, rotation-aware
+              layouts, and a native share-ready calendar flow.
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="../README.md">Read the repo guide</a>
+              <a class="button button-primary" href="https://github.com/jnrahme/GameTimeTest#readme">Read the repo guide</a>
               <a class="button button-secondary" href="#architecture">Review the architecture</a>
             </div>
           </div>
           <aside class="device-stack" aria-label="Application proof points">
             <div class="phone-frame">
               <img
-                src="./screenshots/order-history-portrait.png"
-                width="390"
-                height="844"
-                alt="Portrait screenshot of the GameTime order history app."
+                src="./screenshots/order-history-native-portrait.png"
+                width="1178"
+                height="2556"
+                alt="Native iOS portrait screenshot of the GameTime order history app."
               />
             </div>
             <div class="proof-row">
-              <div class="proof"><strong>42</strong><span>Passing tests</span></div>
+              <div class="proof"><strong>41</strong><span>Passing tests</span></div>
+              <div class="proof"><strong>13</strong><span>Jest suites</span></div>
               <div class="proof"><strong>95</strong><span>Line coverage gate</span></div>
-              <div class="proof"><strong>80</strong><span>Branch coverage gate</span></div>
             </div>
           </aside>
         </div>
@@ -745,9 +752,10 @@
                 <span class="number">01</span>
                 <h3>Mobile first, not web disguised as mobile.</h3>
                 <p>
-                  The React Native app uses safe areas, native share APIs,
-                  accessible press targets, and orientation-aware layouts. The web
-                  preview exists only as a reviewer convenience.
+                  The React Native app uses safe areas, React Navigation native
+                  stack behavior, native share APIs, accessible press targets,
+                  and orientation-aware layouts. The web preview exists only as a
+                  reviewer convenience.
                 </p>
               </article>
               <article class="card metric-card">
@@ -763,9 +771,9 @@
                 <span class="number">03</span>
                 <h3>Architecture that is easy to replace.</h3>
                 <p>
-                  Mock endpoints live behind a validated service boundary, domain
-                  behavior is pure TypeScript, and screens consume controller
-                  state instead of owning business logic.
+                  Mock endpoints live behind a validated service boundary, server
+                  state lives in TanStack Query, route state lives in React
+                  Navigation, and screens receive plain props.
                 </p>
               </article>
             </div>
@@ -790,17 +798,25 @@
                 <div class="layer-row">
                   <div class="layer-label">App shell</div>
                   <div class="layer-nodes">
-                    <div class="node">App.tsx safe area provider</div>
-                    <div class="node">Expo SDK 56 config</div>
-                    <div class="node">Rotation enabled app.json</div>
+                    <div class="node">QueryClientProvider with retry and stale-time defaults</div>
+                    <div class="node">SafeAreaProvider and app error boundary</div>
+                    <div class="node">Expo SDK 56 with orientation set to default</div>
                   </div>
                 </div>
                 <div class="layer-row">
-                  <div class="layer-label">Feature</div>
+                  <div class="layer-label">Navigation</div>
                   <div class="layer-nodes">
-                    <div class="node">OrdersExperience screen switch</div>
-                    <div class="node">useOrdersController state orchestration</div>
-                    <div class="node">List and detail screens</div>
+                    <div class="node">React Navigation native stack</div>
+                    <div class="node">Typed Orders and OrderDetail routes</div>
+                    <div class="node">gametime://orders deep-link readiness</div>
+                  </div>
+                </div>
+                <div class="layer-row">
+                  <div class="layer-label">Server state</div>
+                  <div class="layer-nodes">
+                    <div class="node">TanStack Query useOrders hook</div>
+                    <div class="node">TanStack Query useOrder hook</div>
+                    <div class="node">Cache, retry, refetch, loading, and error states</div>
                   </div>
                 </div>
                 <div class="layer-row">
@@ -808,23 +824,15 @@
                   <div class="layer-nodes">
                     <div class="node">Zod-validated GET /orders boundary</div>
                     <div class="node">Zod-validated GET /orders/:orderId boundary</div>
-                    <div class="node">Native and web share adapter</div>
+                    <div class="node">Native share, web share, and clipboard fallback</div>
                   </div>
                 </div>
                 <div class="layer-row">
-                  <div class="layer-label">Domain</div>
+                  <div class="layer-label">Domain + UI</div>
                   <div class="layer-nodes">
-                    <div class="node">Runtime schemas with inferred types</div>
-                    <div class="node">Selectors and filtering</div>
-                    <div class="node">ICS calendar generation</div>
-                  </div>
-                </div>
-                <div class="layer-row">
-                  <div class="layer-label">Design system</div>
-                  <div class="layer-nodes">
-                    <div class="node">GameTime color tokens</div>
-                    <div class="node">Action, status, receipt components</div>
-                    <div class="node">Accessible labels and touch targets</div>
+                    <div class="node">Runtime schemas with inferred TypeScript types</div>
+                    <div class="node">Selectors, receipt formatters, and ICS generation</div>
+                    <div class="node">FlashList timeline, receipt detail, and GameTime tokens</div>
                   </div>
                 </div>
               </div>
@@ -836,36 +844,101 @@
           <div class="section-inner">
             <div class="section-heading">
               <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Data Flow</div>
-              <h2>A realistic path from mocked API to native share.</h2>
+              <h2>Routes, cache, validation, rendering, share.</h2>
               <p>
                 The point of the mock layer is not to fake complexity. It is to
-                define the same contract a real backend would satisfy later.
+                define the same contract a real backend would satisfy later,
+                while keeping navigation and server state in the libraries built
+                for those jobs.
               </p>
             </div>
             <div class="diagram">
               <div class="diagram-title">Order interaction flow</div>
               <div class="flow" aria-label="Order history data flow diagram">
                 <div class="flow-step">
-                  <strong>Load</strong>
-                  <span>Controller requests orders through the service boundary.</span>
+                  <strong>Navigate</strong>
+                  <span>Native stack owns Orders and OrderDetail with typed route params.</span>
                 </div>
                 <div class="flow-step">
-                  <strong>Shape</strong>
-                  <span>Domain selectors filter, search, sort, and summarize.</span>
+                  <strong>Fetch</strong>
+                  <span>TanStack Query calls the mock API and manages retry, cache, and refetch.</span>
+                </div>
+                <div class="flow-step">
+                  <strong>Validate</strong>
+                  <span>Zod parses responses before data crosses into the domain layer.</span>
                 </div>
                 <div class="flow-step">
                   <strong>Render</strong>
-                  <span>Cards show event imagery, status, date, venue, and total.</span>
-                </div>
-                <div class="flow-step">
-                  <strong>Detail</strong>
-                  <span>Receipt lines, seats, payment, and confirmation are composed.</span>
+                  <span>Containers derive view state; screens render FlashList and receipt UI.</span>
                 </div>
                 <div class="flow-step">
                   <strong>Share</strong>
                   <span>ICS content is generated and passed to native share surfaces.</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="decisions">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Decision Ledger</div>
+              <h2>Every major choice has a product reason.</h2>
+              <p>
+                The implementation uses real libraries where they remove real
+                risk, and simple local code where a library would be ceremony.
+                This is the architecture review in plain English.
+              </p>
+            </div>
+            <div class="grid grid-2">
+              <article class="card">
+                <h3>React Navigation for screen ownership.</h3>
+                <p>
+                  The detail screen is a route, not a boolean. That gives the app
+                  route params, native back behavior, iOS swipe-back, and
+                  deep-link readiness through `gametime://orders/:orderId`.
+                </p>
+              </article>
+              <article class="card">
+                <h3>TanStack Query for server state.</h3>
+                <p>
+                  Orders have loading, retry, stale-time, cache, and refetch
+                  semantics. Query owns those concerns so screens do not
+                  hand-roll flags or duplicate async logic.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Zod for the trust boundary.</h3>
+                <p>
+                  Mock responses are validated like real network responses.
+                  TypeScript types are inferred from the same schemas, so runtime
+                  contracts and compile-time contracts stay aligned.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Containers keep screens honest.</h3>
+                <p>
+                  Containers connect routes, queries, local search/filter state,
+                  and selectors. Screens receive plain props and stay focused on
+                  layout, accessibility, and user interaction.
+                </p>
+              </article>
+              <article class="card">
+                <h3>FlashList anticipates real order volume.</h3>
+                <p>
+                  A purchase history can grow. Virtualization keeps the timeline
+                  ready for larger data sets without changing the screen API.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Native screenshots prove the surface.</h3>
+                <p>
+                  The README uses iPhone simulator captures for the primary
+                  proof path: order history, empty search, past filter, receipt,
+                  native share sheet, shared state, and landscape layout.
+                </p>
+              </article>
             </div>
           </div>
         </section>
@@ -887,20 +960,20 @@
                 </div>
                 <div class="timeline-item">
                   <strong>Landscape</strong>
-                  <span>Moves summary metrics beside the hero copy and keeps controls visible above the list.</span>
+                  <span>Reflows the list and detail composition so the native simulator remains readable after rotation.</span>
                 </div>
                 <div class="timeline-item">
                   <strong>Tablet and web preview</strong>
-                  <span>Uses the same React Native code path with wider grids and constrained content widths.</span>
+                  <span>Uses the same React Native code path with wider grids and constrained content widths for reviewers.</span>
                 </div>
               </div>
             </div>
             <div class="screenshot-panel">
               <img
-                src="./screenshots/order-history-landscape.png"
-                width="844"
-                height="390"
-                alt="Landscape screenshot of the GameTime order history app."
+                src="./screenshots/order-history-native-landscape.png"
+                width="2556"
+                height="1178"
+                alt="Native iOS landscape screenshot of the GameTime order history app."
               />
             </div>
           </div>
@@ -914,8 +987,7 @@
               <p>
                 The implementation is backed by strict typing, tests around the
                 highest-risk business behavior, enforced coverage thresholds,
-                Expo compatibility checks, and visual inspection in mobile
-                viewports.
+                Expo compatibility checks, and native simulator screenshots.
               </p>
             </div>
             <div class="grid grid-2">
@@ -923,8 +995,8 @@
                 <h3>Tests target behavior, not snapshots.</h3>
                 <p>
                   Coverage validates calendar generation, receipt formatting,
-                  selectors, controller retries, mock API validation, share
-                  fallbacks, and list/detail interactions.
+                  selectors, TanStack Query hooks, container retries, mock API
+                  validation, share fallbacks, and list/detail interactions.
                 </p>
               </article>
               <article class="card">
@@ -938,17 +1010,17 @@
               <article class="card">
                 <h3>Expo compatibility is verified.</h3>
                 <p>
-                  Node 22, Expo SDK 56, React Native 0.85, FlashList, and
-                  SDK-matched packages are encoded in the repo and checked before
-                  push.
+                  Node 22, Expo SDK 56, React Native 0.85, React Navigation,
+                  TanStack Query, FlashList, and SDK-matched packages are encoded
+                  in the repo and checked before push.
                 </p>
               </article>
               <article class="card">
                 <h3>Mobile resilience is built in.</h3>
                 <p>
                   Buttons use roles and labels, status chips include text,
-                  Android hardware back is handled, and an app error boundary
-                  prevents a blank failure state.
+                  native-stack back behavior is delegated to React Navigation,
+                  and an app error boundary prevents a blank failure state.
                 </p>
               </article>
             </div>
@@ -1005,52 +1077,59 @@
         <section id="tooling">
           <div class="section-inner">
             <div class="section-heading">
-              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Agentic Setup</div>
-              <h2>AI assistance with senior-engineering guardrails.</h2>
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> AI Setup</div>
+              <h2>How Codex was used without losing engineering control.</h2>
               <p>
-                The work used Codex with project instructions, MCP/tool checks,
-                and explicit verification loops. The result is not a pile of
-                generated code; it is a constrained implementation with traceable
-                decisions.
+                The AI workflow was treated like a senior engineer with tools:
+                read the repo first, obey project rules, use specialist skills
+                for the work at hand, verify before claiming success, and keep
+                public documentation tied to evidence.
               </p>
             </div>
             <div class="tool-grid">
               <article class="tool">
                 <small>AGENTS.md</small>
-                <strong>Repo rules first</strong>
+                <strong>Project rules first</strong>
                 <p>
-                  The project codifies Node 22, Expo SDK 56 docs, typed mock API
-                  boundaries, accessibility, and tests as non-negotiable defaults.
+                  The repo instructions require Node 22, Expo SDK 56 docs before
+                  RN/Expo changes, typed mock API boundaries, accessible mobile
+                  UI, and tests for order and sharing behavior.
                 </p>
               </article>
               <article class="tool">
                 <small>MCP</small>
-                <strong>SmartAssist check</strong>
+                <strong>Memory check, honest fallback</strong>
                 <p>
-                  SmartAssist was queried before edits per protocol. The repo had
-                  no memory directory, so decisions fell back to local source,
-                  prompt, docs, and verification evidence.
+                  SmartAssist was queried before edits and architecture decisions.
+                  Its local data directory was missing, so no hidden memory was
+                  used; the source, prompt, docs, and test output became the
+                  authority.
                 </p>
               </article>
               <article class="tool">
                 <small>Skills</small>
-                <strong>Specialized workflows</strong>
+                <strong>Specialists on demand</strong>
                 <p>
-                  PDF reading, UI/UX guidance, Playwright visual inspection, and
-                  GitHub publishing workflows were used where they materially
-                  improved accuracy.
+                  Brainstorming shaped scope, React Native guidance shaped mobile
+                  decisions, UI/UX guidance shaped this site, Playwright checked
+                  visuals, and GitHub guidance handled publishing.
                 </p>
               </article>
               <article class="tool">
-                <small>Review posture</small>
-                <strong>Professional constraints</strong>
+                <small>Verification</small>
+                <strong>Evidence before claims</strong>
                 <p>
-                  The implementation favors small modules, typed contracts,
-                  minimal dependencies, and clear tradeoffs over theatrical
-                  complexity.
+                  The workflow runs typecheck, Jest coverage gates, Expo package
+                  compatibility, native screenshots, CI, and Pages checks before
+                  presenting the work as review-ready.
                 </p>
               </article>
             </div>
+            <pre class="code-strip" aria-label="AI assisted implementation workflow"><code><b>1.</b> Read prompt, AGENTS.md, source, and existing docs
+<b>2.</b> Check SmartAssist MCP for project memory
+<b>3.</b> Apply relevant Codex skills: RN, UI/UX, GitHub, Playwright, verification
+<b>4.</b> Implement with small architecture boundaries
+<b>5.</b> Verify locally, push, watch CI, and confirm GitHub Pages</code></pre>
           </div>
         </section>
       </main>
