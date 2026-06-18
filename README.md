@@ -20,12 +20,15 @@ feature branch.
 
 ## Demo Video
 
-[![Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase-poster.jpg)](docs/showcase/gametime-order-history-showcase.mp4)
+[![Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase-poster.jpg)](https://jnrahme.github.io/GameTimeTest/#demo)
 
-[Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase.mp4).
+[Watch the 67-second implementation walkthrough](https://jnrahme.github.io/GameTimeTest/#demo).
 It uses the native app screenshots below with ElevenLabs narration to cover the
 purchase timeline, receipt detail, Share with Friends flow, rotation-aware UI,
 and quality gates.
+
+Fallback links: [open the MP4 directly](https://jnrahme.github.io/GameTimeTest/showcase/gametime-order-history-showcase.mp4)
+or [download it from the repo](docs/showcase/gametime-order-history-showcase.mp4).
 
 ## Screenshots
 
