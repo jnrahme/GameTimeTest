@@ -325,6 +325,38 @@
         line-height: 1.6;
       }
 
+      .video-shell {
+        background: #05060d;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .video-shell video {
+        background: #000;
+        display: block;
+        width: 100%;
+      }
+
+      .video-caption {
+        align-items: center;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 14px;
+        font-weight: 750;
+        gap: 12px;
+        justify-content: space-between;
+        padding: 14px 16px;
+      }
+
+      .video-caption a {
+        color: var(--mint);
+        font-weight: 950;
+      }
+
       .grid {
         display: grid;
         gap: 18px;
@@ -691,6 +723,7 @@
           <span>Build</span>
         </a>
         <div class="nav-links">
+          <a href="#demo">Video</a>
           <a href="#why">Why</a>
           <a href="#architecture">Architecture</a>
           <a href="#flow">Flow</a>
@@ -713,7 +746,8 @@
               layouts, and a native share-ready calendar flow.
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/jnrahme/GameTimeTest#readme">Read the repo guide</a>
+              <a class="button button-primary" href="#demo">Watch the demo</a>
+              <a class="button button-secondary" href="https://github.com/jnrahme/GameTimeTest#readme">Read the repo guide</a>
               <a class="button button-secondary" href="#architecture">Review the architecture</a>
             </div>
           </div>
@@ -736,6 +770,35 @@
       </header>
 
       <main>
+        <section id="demo">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Demo Video</div>
+              <h2>Watch the implementation walkthrough.</h2>
+              <p>
+                A 67-second narrated pass through the native purchase timeline,
+                receipt detail, Share with Friends flow, rotation-aware layout,
+                and review-ready engineering decisions.
+              </p>
+            </div>
+            <div class="video-shell">
+              <video
+                controls
+                playsinline
+                preload="metadata"
+                poster="./showcase/gametime-order-history-showcase-poster.jpg"
+                src="./showcase/gametime-order-history-showcase.mp4"
+              >
+                <a href="./showcase/gametime-order-history-showcase.mp4">Watch the implementation walkthrough video.</a>
+              </video>
+              <div class="video-caption">
+                <span>MP4, H.264 video with ElevenLabs narration.</span>
+                <a href="./showcase/gametime-order-history-showcase.mp4">Open video file</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="why">
           <div class="section-inner">
             <div class="section-heading">
