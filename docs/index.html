@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A high-end implementation showcase for the GameTime order history React Native take-home."
+    />
+    <link rel="icon" href="../assets/favicon.png" />
+    <title>GameTime Order History - Implementation Showcase</title>
+    <style>
+      :root {
+        --bg: #010314;
+        --ink: #ffffff;
+        --muted: #c4c7cf;
+        --dim: #8e9098;
+        --surface: #1c1c20;
+        --surface-2: #26262b;
+        --line: #313136;
+        --line-strong: #5a5a5a;
+        --mint: #66fac8;
+        --mint-2: #35e5ad;
+        --danger: #ff5a6b;
+        --radius: 8px;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .site-shell {
+        overflow: hidden;
+      }
+
+      .nav {
+        align-items: center;
+        background: rgba(1, 3, 20, 0.82);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        gap: 24px;
+        justify-content: space-between;
+        left: 0;
+        padding: 18px clamp(18px, 4vw, 56px);
+        position: sticky;
+        right: 0;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+        font-size: 19px;
+        font-weight: 950;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .brand-mark {
+        border-bottom: 14px solid transparent;
+        border-left: 11px solid var(--mint);
+        border-top: 14px solid transparent;
+        display: inline-block;
+        height: 0;
+        width: 0;
+      }
+
+      .nav-links {
+        align-items: center;
+        display: flex;
+        gap: 18px;
+        justify-content: flex-end;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus-visible {
+        color: var(--mint);
+      }
+
+      .hero {
+        min-height: 78dvh;
+        padding: clamp(28px, 5vw, 72px);
+        position: relative;
+      }
+
+      .hero::before {
+        background:
+          linear-gradient(90deg, rgba(1, 3, 20, 0.96), rgba(1, 3, 20, 0.78) 44%, rgba(1, 3, 20, 0.58)),
+          url("./screenshots/order-history-landscape.png") center / cover;
+        content: "";
+        inset: 0;
+        position: absolute;
+        z-index: 0;
+      }
+
+      .hero-inner {
+        display: grid;
+        gap: clamp(32px, 5vw, 72px);
+        grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.62fr);
+        margin: 0 auto;
+        max-width: 1180px;
+        min-height: 66dvh;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-copy {
+        align-self: center;
+        max-width: 700px;
+        padding: 42px 0;
+      }
+
+      .eyebrow {
+        align-items: center;
+        color: var(--mint);
+        display: inline-flex;
+        font-size: 13px;
+        font-weight: 950;
+        gap: 10px;
+        letter-spacing: 0;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      .spark {
+        border: 2px solid var(--mint);
+        height: 18px;
+        position: relative;
+        transform: rotate(45deg);
+        width: 18px;
+      }
+
+      .spark::before,
+      .spark::after {
+        background: var(--mint);
+        content: "";
+        position: absolute;
+      }
+
+      .spark::before {
+        height: 2px;
+        left: -8px;
+        right: -8px;
+        top: 6px;
+      }
+
+      .spark::after {
+        bottom: -8px;
+        left: 6px;
+        top: -8px;
+        width: 2px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(46px, 7vw, 92px);
+        font-weight: 950;
+        letter-spacing: 0;
+        line-height: 0.94;
+        max-width: 760px;
+      }
+
+      .hero-lede {
+        color: var(--muted);
+        font-size: clamp(18px, 2.2vw, 24px);
+        font-weight: 600;
+        line-height: 1.5;
+        margin-top: 28px;
+        max-width: 690px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+
+      .button {
+        align-items: center;
+        border-radius: var(--radius);
+        display: inline-flex;
+        font-size: 15px;
+        font-weight: 950;
+        gap: 10px;
+        min-height: 48px;
+        padding: 0 18px;
+      }
+
+      .button-primary {
+        background: var(--mint);
+        color: #07110e;
+      }
+
+      .button-secondary {
+        border: 1px solid var(--line-strong);
+        color: var(--ink);
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        outline: 3px solid rgba(102, 250, 200, 0.32);
+        outline-offset: 2px;
+      }
+
+      .device-stack {
+        align-self: end;
+        display: grid;
+        gap: 18px;
+        justify-self: end;
+        max-width: 430px;
+      }
+
+      .phone-frame {
+        background: #05060d;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 12px;
+      }
+
+      .phone-frame img {
+        border-radius: 6px;
+        width: 100%;
+      }
+
+      .proof-row {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .proof {
+        background: rgba(28, 28, 32, 0.78);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+
+      .proof strong {
+        color: var(--ink);
+        display: block;
+        font-size: 22px;
+        font-weight: 950;
+      }
+
+      .proof span {
+        color: var(--muted);
+        display: block;
+        font-size: 12px;
+        font-weight: 850;
+        margin-top: 6px;
+      }
+
+      section {
+        padding: clamp(56px, 8vw, 104px) clamp(18px, 4vw, 56px);
+      }
+
+      .section-inner {
+        margin: 0 auto;
+        max-width: 1180px;
+      }
+
+      .section-heading {
+        display: grid;
+        gap: 16px;
+        margin-bottom: 34px;
+        max-width: 780px;
+      }
+
+      .section-heading h2 {
+        font-size: clamp(34px, 5vw, 60px);
+        font-weight: 950;
+        letter-spacing: 0;
+        line-height: 1;
+      }
+
+      .section-heading p {
+        color: var(--muted);
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.6;
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: clamp(20px, 3vw, 30px);
+      }
+
+      .card h3 {
+        font-size: 22px;
+        font-weight: 950;
+        line-height: 1.1;
+        margin-bottom: 12px;
+      }
+
+      .card p,
+      .card li {
+        color: var(--muted);
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.58;
+      }
+
+      .metric-card {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-card .number {
+        color: var(--mint);
+        font-size: 40px;
+        font-weight: 950;
+        letter-spacing: 0;
+      }
+
+      .diagram {
+        background: #0e0e0f;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        padding: clamp(20px, 3vw, 32px);
+      }
+
+      .diagram-title {
+        color: var(--mint);
+        font-size: 13px;
+        font-weight: 950;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      .layer-map {
+        display: grid;
+        gap: 14px;
+      }
+
+      .layer-row {
+        align-items: stretch;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 150px 1fr;
+      }
+
+      .layer-label {
+        align-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--ink);
+        display: flex;
+        font-size: 14px;
+        font-weight: 950;
+        justify-content: center;
+        padding: 14px;
+        text-align: center;
+      }
+
+      .layer-nodes {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .node {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 800;
+        min-height: 58px;
+        padding: 14px;
+      }
+
+      .flow {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .flow-step {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        min-height: 136px;
+        padding: 18px;
+        position: relative;
+      }
+
+      .flow-step:not(:last-child)::after {
+        border-right: 2px solid var(--mint);
+        border-top: 2px solid var(--mint);
+        content: "";
+        height: 12px;
+        position: absolute;
+        right: -9px;
+        top: 58px;
+        transform: rotate(45deg);
+        width: 12px;
+        z-index: 2;
+      }
+
+      .flow-step strong {
+        color: var(--ink);
+        display: block;
+        font-size: 17px;
+        font-weight: 950;
+        margin-bottom: 8px;
+      }
+
+      .flow-step span {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .split-showcase {
+        align-items: center;
+        display: grid;
+        gap: clamp(28px, 5vw, 70px);
+        grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.72fr);
+      }
+
+      .screenshot-panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 12px;
+      }
+
+      .screenshot-panel img {
+        border-radius: 6px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 14px;
+      }
+
+      .timeline-item {
+        border-left: 3px solid var(--mint);
+        padding: 4px 0 4px 18px;
+      }
+
+      .timeline-item strong {
+        display: block;
+        font-size: 18px;
+        font-weight: 950;
+        margin-bottom: 6px;
+      }
+
+      .timeline-item span {
+        color: var(--muted);
+        display: block;
+        font-size: 15px;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .tool-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .tool {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        min-height: 168px;
+        padding: 20px;
+      }
+
+      .tool small {
+        color: var(--mint);
+        display: block;
+        font-size: 12px;
+        font-weight: 950;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .tool strong {
+        display: block;
+        font-size: 20px;
+        font-weight: 950;
+        margin-bottom: 10px;
+      }
+
+      .tool p {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 650;
+        line-height: 1.52;
+      }
+
+      .code-strip {
+        background: #0e0e0f;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--muted);
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 14px;
+        line-height: 1.8;
+        overflow-x: auto;
+        padding: 20px;
+      }
+
+      .code-strip b {
+        color: var(--mint);
+        font-weight: 800;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 650;
+        padding: 28px clamp(18px, 4vw, 56px);
+      }
+
+      .footer-inner {
+        align-items: center;
+        display: flex;
+        gap: 18px;
+        justify-content: space-between;
+        margin: 0 auto;
+        max-width: 1180px;
+      }
+
+      @media (max-width: 920px) {
+        .hero-inner,
+        .split-showcase {
+          grid-template-columns: 1fr;
+        }
+
+        .device-stack {
+          justify-self: stretch;
+          max-width: none;
+        }
+
+        .grid-3,
+        .grid-2,
+        .tool-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        .flow-step:not(:last-child)::after {
+          bottom: -8px;
+          right: 50%;
+          top: auto;
+          transform: rotate(135deg);
+        }
+
+        .layer-row {
+          grid-template-columns: 1fr;
+        }
+
+        .layer-nodes {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: flex-start;
+        }
+
+        .hero {
+          padding: 24px 16px;
+        }
+
+        .hero-inner {
+          min-height: auto;
+        }
+
+        .proof-row {
+          grid-template-columns: 1fr;
+        }
+
+        section {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .card,
+        .tool,
+        .phone-frame,
+        .screenshot-panel {
+          transition:
+            transform 220ms ease,
+            border-color 220ms ease;
+        }
+
+        .card:hover,
+        .tool:hover,
+        .phone-frame:hover,
+        .screenshot-panel:hover {
+          border-color: rgba(102, 250, 200, 0.52);
+          transform: translateY(-2px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="site-shell">
+      <nav class="nav" aria-label="Implementation showcase navigation">
+        <a class="brand" href="#top" aria-label="GameTime implementation showcase home">
+          <span>GameTime</span>
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Build</span>
+        </a>
+        <div class="nav-links">
+          <a href="#why">Why</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#flow">Flow</a>
+          <a href="#quality">Quality</a>
+          <a href="#repo">Repo</a>
+          <a href="#tooling">Tooling</a>
+        </div>
+      </nav>
+
+      <header class="hero" id="top">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Senior Mobile Take-Home</div>
+            <h1>Built like a production GameTime mobile feature.</h1>
+            <p class="hero-lede">
+              This implementation turns a compact order-history prompt into a
+              brand-aligned, testable React Native experience with clear domain
+              boundaries, rotation-aware layouts, and a share-ready calendar flow.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="../README.md">Read the repo guide</a>
+              <a class="button button-secondary" href="#architecture">Review the architecture</a>
+            </div>
+          </div>
+          <aside class="device-stack" aria-label="Application proof points">
+            <div class="phone-frame">
+              <img
+                src="./screenshots/order-history-portrait.png"
+                width="390"
+                height="844"
+                alt="Portrait screenshot of the GameTime order history app."
+              />
+            </div>
+            <div class="proof-row">
+              <div class="proof"><strong>15</strong><span>Passing tests</span></div>
+              <div class="proof"><strong>22</strong><span>Node baseline</span></div>
+              <div class="proof"><strong>56</strong><span>Expo SDK</span></div>
+            </div>
+          </aside>
+        </div>
+      </header>
+
+      <main>
+        <section id="why">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Product Intent</div>
+              <h2>Why this shape wins the review.</h2>
+              <p>
+                The prompt asks for past purchases, detail receipts, mock network
+                calls, sharing, and test coverage. The implementation goes further
+                by showing how those requirements would become a maintainable
+                mobile feature inside a real ticketing product.
+              </p>
+            </div>
+            <div class="grid grid-3">
+              <article class="card metric-card">
+                <span class="number">01</span>
+                <h3>Mobile first, not web disguised as mobile.</h3>
+                <p>
+                  The React Native app uses safe areas, native share APIs,
+                  accessible press targets, and orientation-aware layouts. The web
+                  preview exists only as a reviewer convenience.
+                </p>
+              </article>
+              <article class="card metric-card">
+                <span class="number">02</span>
+                <h3>Brand fluency over generic polish.</h3>
+                <p>
+                  The visual system follows the current GameTime language:
+                  near-black surfaces, white type, event imagery, and mint
+                  emphasis for state and action.
+                </p>
+              </article>
+              <article class="card metric-card">
+                <span class="number">03</span>
+                <h3>Architecture that is easy to replace.</h3>
+                <p>
+                  Mock endpoints live behind a service boundary, domain behavior
+                  is pure TypeScript, and screens consume controller state instead
+                  of owning business logic.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="architecture">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Architecture</div>
+              <h2>Layered to make tradeoffs obvious.</h2>
+              <p>
+                The repo separates prompt-aligned entities, deterministic domain
+                logic, mock networking, presentation state, and UI primitives.
+                That keeps feature work local while making replacement paths clear.
+              </p>
+            </div>
+
+            <div class="diagram">
+              <div class="diagram-title">Source layout</div>
+              <div class="layer-map" aria-label="Application architecture diagram">
+                <div class="layer-row">
+                  <div class="layer-label">App shell</div>
+                  <div class="layer-nodes">
+                    <div class="node">App.tsx safe area provider</div>
+                    <div class="node">Expo SDK 56 config</div>
+                    <div class="node">Rotation enabled app.json</div>
+                  </div>
+                </div>
+                <div class="layer-row">
+                  <div class="layer-label">Feature</div>
+                  <div class="layer-nodes">
+                    <div class="node">OrdersExperience screen switch</div>
+                    <div class="node">useOrdersController state orchestration</div>
+                    <div class="node">List and detail screens</div>
+                  </div>
+                </div>
+                <div class="layer-row">
+                  <div class="layer-label">Services</div>
+                  <div class="layer-nodes">
+                    <div class="node">GET /orders mock boundary</div>
+                    <div class="node">GET /orders/:orderId mock boundary</div>
+                    <div class="node">Native and web share adapter</div>
+                  </div>
+                </div>
+                <div class="layer-row">
+                  <div class="layer-label">Domain</div>
+                  <div class="layer-nodes">
+                    <div class="node">Prompt-aligned Order, Event, Receipt types</div>
+                    <div class="node">Selectors and filtering</div>
+                    <div class="node">ICS calendar generation</div>
+                  </div>
+                </div>
+                <div class="layer-row">
+                  <div class="layer-label">Design system</div>
+                  <div class="layer-nodes">
+                    <div class="node">GameTime color tokens</div>
+                    <div class="node">Action, status, receipt components</div>
+                    <div class="node">Accessible labels and touch targets</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="flow">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Data Flow</div>
+              <h2>A realistic path from mocked API to native share.</h2>
+              <p>
+                The point of the mock layer is not to fake complexity. It is to
+                define the same contract a real backend would satisfy later.
+              </p>
+            </div>
+            <div class="diagram">
+              <div class="diagram-title">Order interaction flow</div>
+              <div class="flow" aria-label="Order history data flow diagram">
+                <div class="flow-step">
+                  <strong>Load</strong>
+                  <span>Controller requests orders through the service boundary.</span>
+                </div>
+                <div class="flow-step">
+                  <strong>Shape</strong>
+                  <span>Domain selectors filter, search, sort, and summarize.</span>
+                </div>
+                <div class="flow-step">
+                  <strong>Render</strong>
+                  <span>Cards show event imagery, status, date, venue, and total.</span>
+                </div>
+                <div class="flow-step">
+                  <strong>Detail</strong>
+                  <span>Receipt lines, seats, payment, and confirmation are composed.</span>
+                </div>
+                <div class="flow-step">
+                  <strong>Share</strong>
+                  <span>ICS content is generated and passed to native share surfaces.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-inner split-showcase">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Rotation</div>
+              <h2>Portrait and landscape are first-class.</h2>
+              <p>
+                The app is not locked to portrait. It uses viewport dimensions to
+                change hero height, type scale, metric placement, and detail
+                composition so the interface remains intentional after rotation.
+              </p>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <strong>Portrait</strong>
+                  <span>Prioritizes thumb-friendly scanning, search, filters, and image-led order cards.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>Landscape</strong>
+                  <span>Moves summary metrics beside the hero copy and keeps controls visible above the list.</span>
+                </div>
+                <div class="timeline-item">
+                  <strong>Tablet and web preview</strong>
+                  <span>Uses the same React Native code path with wider grids and constrained content widths.</span>
+                </div>
+              </div>
+            </div>
+            <div class="screenshot-panel">
+              <img
+                src="./screenshots/order-history-landscape.png"
+                width="844"
+                height="390"
+                alt="Landscape screenshot of the GameTime order history app."
+              />
+            </div>
+          </div>
+        </section>
+
+        <section id="quality">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Quality Gates</div>
+              <h2>Evidence before claims.</h2>
+              <p>
+                The implementation is backed by strict typing, tests around the
+                highest-risk business behavior, Expo compatibility checks, and
+                visual inspection in mobile viewports.
+              </p>
+            </div>
+            <div class="grid grid-2">
+              <article class="card">
+                <h3>Tests target behavior, not snapshots.</h3>
+                <p>
+                  Coverage validates calendar generation, receipt formatting,
+                  selectors, mock API failures, and an interactive order card path.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Strict TypeScript protects the boundaries.</h3>
+                <p>
+                  Domain models follow the take-home prompt, and runtime adapters
+                  expose narrow interfaces so UI and networking stay decoupled.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Expo compatibility is verified.</h3>
+                <p>
+                  Node 22, Expo SDK 56, React Native 0.85, and SDK-matched
+                  packages are encoded in the repo and checked before push.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Accessibility is designed into primitives.</h3>
+                <p>
+                  Buttons use roles and labels, status chips include text, touch
+                  targets meet mobile sizing, and text wraps instead of clipping.
+                </p>
+              </article>
+            </div>
+            <pre class="code-strip" aria-label="Verification commands"><code><b>$</b> nvm use
+<b>$</b> make verify
+<b>$</b> make expo-check</code></pre>
+          </div>
+        </section>
+
+        <section id="repo">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Repository Surface</div>
+              <h2>Professional before the first file opens.</h2>
+              <p>
+                A strong GitHub page should make the quality bar visible:
+                truthful badges, community health files, screenshots, diagrams,
+                repeatable commands, and metadata that matches the implementation.
+              </p>
+            </div>
+            <div class="grid grid-3">
+              <article class="card metric-card">
+                <span class="number">CI</span>
+                <h3>Verification is automated.</h3>
+                <p>
+                  GitHub Actions installs with Node 22, runs strict TypeScript,
+                  executes Jest, and checks Expo SDK package compatibility.
+                </p>
+              </article>
+              <article class="card metric-card">
+                <span class="number">5</span>
+                <h3>Community health files are present.</h3>
+                <p>
+                  Conduct, contribution, security, license, and CODEOWNERS files
+                  fill the public GitHub trust surface without making false claims.
+                </p>
+              </article>
+              <article class="card metric-card">
+                <span class="number">GH</span>
+                <h3>Repo metadata is intentional.</h3>
+                <p>
+                  The docs include a repository profile with description,
+                  homepage, topics, and public surface checklist for consistency.
+                </p>
+              </article>
+            </div>
+            <pre class="code-strip" aria-label="Repository quality commands"><code><b>$</b> make verify
+<b>$</b> make expo-check
+<b>$</b> gh repo edit jnrahme/GameTimeTest --description "GameTime-themed React Native order history take-home"</code></pre>
+          </div>
+        </section>
+
+        <section id="tooling">
+          <div class="section-inner">
+            <div class="section-heading">
+              <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Agentic Setup</div>
+              <h2>AI assistance with senior-engineering guardrails.</h2>
+              <p>
+                The work used Codex with project instructions, MCP/tool checks,
+                and explicit verification loops. The result is not a pile of
+                generated code; it is a constrained implementation with traceable
+                decisions.
+              </p>
+            </div>
+            <div class="tool-grid">
+              <article class="tool">
+                <small>AGENTS.md</small>
+                <strong>Repo rules first</strong>
+                <p>
+                  The project codifies Node 22, Expo SDK 56 docs, typed mock API
+                  boundaries, accessibility, and tests as non-negotiable defaults.
+                </p>
+              </article>
+              <article class="tool">
+                <small>MCP</small>
+                <strong>SmartAssist check</strong>
+                <p>
+                  SmartAssist was queried before edits per protocol. The repo had
+                  no memory directory, so decisions fell back to local source,
+                  prompt, docs, and verification evidence.
+                </p>
+              </article>
+              <article class="tool">
+                <small>Skills</small>
+                <strong>Specialized workflows</strong>
+                <p>
+                  PDF reading, UI/UX guidance, Playwright visual inspection, and
+                  GitHub publishing workflows were used where they materially
+                  improved accuracy.
+                </p>
+              </article>
+              <article class="tool">
+                <small>Review posture</small>
+                <strong>Professional constraints</strong>
+                <p>
+                  The implementation favors small modules, typed contracts,
+                  minimal dependencies, and clear tradeoffs over theatrical
+                  complexity.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <span>GameTime Order History Mobile - implementation showcase</span>
+          <a href="https://github.com/jnrahme/GameTimeTest">github.com/jnrahme/GameTimeTest</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
