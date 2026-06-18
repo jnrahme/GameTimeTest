@@ -26,23 +26,15 @@ take-home prompt: order history, filters/search, detail receipt, calendar
 sharing, and rotation-aware layout. These captures come from the native Expo app
 running in the iPhone 16 iOS Simulator, not from the web preview.
 
-**Share with Friends proof**
+| 1. Order history | 2. Receipt + Share with Friends | 3. Native iOS share |
+| --- | --- | --- |
+| ![Native iOS GameTime order history list](docs/screenshots/order-history-native-portrait.png) | ![Native iOS GameTime receipt detail with Share with Friends](docs/screenshots/order-detail-native-receipt-share.png) | ![Native iOS share sheet with generated calendar event text](docs/screenshots/order-detail-native-ios-share-sheet.png) |
 
-![Native iOS GameTime Share with Friends CTA](docs/screenshots/order-detail-native-share-with-friends.png)
+| Search empty state | Past purchases filter | Shared confirmation |
+| --- | --- | --- |
+| ![Native iOS GameTime order history empty search state](docs/screenshots/order-history-native-empty-search.png) | ![Native iOS GameTime order history past filter](docs/screenshots/order-history-native-past-filter.png) | ![Native iOS GameTime detail after share completes](docs/screenshots/order-detail-native-shared-state.png) |
 
-| Native order history | Native no-results search |
-| --- | --- |
-| ![Native iOS GameTime order history list](docs/screenshots/order-history-native-portrait.png) | ![Native iOS GameTime order history empty search state](docs/screenshots/order-history-native-empty-search.png) |
-
-| Native past purchases filter | Native receipt and Share with Friends CTA |
-| --- | --- |
-| ![Native iOS GameTime order history past filter](docs/screenshots/order-history-native-past-filter.png) | ![Native iOS GameTime receipt detail with Share with Friends](docs/screenshots/order-detail-native-receipt-share.png) |
-
-| Native iOS share sheet | Native shared confirmation |
-| --- | --- |
-| ![Native iOS share sheet with generated calendar event text](docs/screenshots/order-detail-native-ios-share-sheet.png) | ![Native iOS GameTime detail after share completes](docs/screenshots/order-detail-native-shared-state.png) |
-
-| Native landscape layout |
+| Rotation-aware landscape layout |
 | --- |
 | ![Native iOS GameTime order history landscape layout](docs/screenshots/order-history-native-landscape.png) |
 
@@ -146,7 +138,7 @@ and responsive layouts that also hold up in Expo's web preview.
 flowchart LR
   Rules[AGENTS.md + Node 22] --> Build[Expo React Native implementation]
   Build --> Verify[make verify]
-  Verify --> Coverage[41 tests + coverage gate]
+  Verify --> Coverage[43 tests + coverage gate]
   Coverage --> ExpoCheck[make expo-check]
   ExpoCheck --> Screens[Native iOS portrait + landscape screenshots]
   Screens --> CI[GitHub Actions CI]
