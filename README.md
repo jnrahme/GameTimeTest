@@ -21,11 +21,36 @@ feature branch.
 ## Screenshots
 
 These are not decorative mocks. They are generated from the working app and kept
-in the repo as review assets.
+in the repo as review assets. Together they cover the main user paths from the
+take-home prompt: order history, filters/search, detail receipt, calendar
+sharing, and rotation-aware layout.
 
-| Portrait | Landscape |
+| Order history | No-results search |
 | --- | --- |
-| ![GameTime order history portrait](docs/screenshots/order-history-portrait.png) | ![GameTime order history landscape](docs/screenshots/order-history-landscape.png) |
+| ![GameTime order history list in portrait](docs/screenshots/order-history-list-portrait.png) | ![GameTime order history empty search state](docs/screenshots/order-history-empty-search.png) |
+
+| Past purchases filter | Receipt detail and share entry |
+| --- | --- |
+| ![GameTime order history past filter](docs/screenshots/order-history-past-filter.png) | ![GameTime order detail receipt and share action](docs/screenshots/order-detail-receipt-share.png) |
+
+| Calendar share confirmation | Landscape layout |
+| --- | --- |
+| ![GameTime order detail calendar copied confirmation](docs/screenshots/order-detail-calendar-copied.png) | ![GameTime order history landscape layout](docs/screenshots/order-history-list-landscape.png) |
+
+## Assessment Evidence
+
+The attached PDF asks for an order history experience with these points. This
+repo proves each one directly in the product surface, source, and tests.
+
+| PDF requirement | Where it is proven |
+| --- | --- |
+| Display a list of the user's past purchases | The order timeline is shown in the order history screenshots above. Implementation: [OrdersListScreen.tsx](src/features/orders/OrdersListScreen.tsx), [OrderCard.tsx](src/features/orders/OrderCard.tsx), and [mockOrders.ts](src/data/mockOrders.ts). |
+| Tapping a purchase opens a detail screen | The receipt detail screenshot shows the selected order path. Implementation: [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx) handles selection and back navigation; [OrderDetailScreen.tsx](src/features/orders/OrderDetailScreen.tsx) renders the detail view. |
+| Detail includes event name and information | The detail screen shows the event name, venue, date, category, confirmation, payment, and seats. Formatting is centralized in [formatters.ts](src/domain/orders/formatters.ts). |
+| Detail includes receipt with price breakdown | The receipt screenshot shows subtotal, fees, tax, discount when present, and total. Implementation: [ReceiptRow.tsx](src/components/ReceiptRow.tsx) and `getReceiptLineItems` in [formatters.ts](src/domain/orders/formatters.ts). |
+| Share with Friends generates a calendar event | The share confirmation screenshot shows the calendar flow after tapping the CTA. Implementation: [calendar.ts](src/domain/orders/calendar.ts) builds the ICS payload and [shareCalendar.ts](src/services/shareCalendar.ts) sends it to native/web share surfaces with clipboard fallback. |
+| Simulate network calls with mock data | [ordersApi.ts](src/services/ordersApi.ts) simulates `GET /orders` and `GET /orders/:orderId` with latency, failure states, and Zod response validation from [schema.ts](src/domain/orders/schema.ts). |
+| Include test coverage | Tests cover selectors, formatting, calendar generation, mock API validation, controller states, list/detail UI, share fallback, and the app shell. Run `make verify` for TypeScript plus Jest coverage gates. |
 
 ## Implementation Showcase
 
