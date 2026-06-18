@@ -13,7 +13,9 @@ changes small, typed, tested, and consistent with the patterns described below.
   bare `npm install`, so versions remain SDK-compatible.
 - Run the application with `npm run ios`, `npm run android`, or `npm run web`.
 - Keep the following commands green before every pull request or material change:
-  - `npm run verify` — strict `tsc --noEmit` followed by Jest with coverage.
+  - `npm run verify` — strict `tsc --noEmit`, ESLint, then Jest with coverage.
+  - `npm run format` — apply Prettier formatting (CI enforces it via
+    `npm run format:check`).
   - `make expo-check` — confirms installed versions match Expo SDK 56.
 - Coverage thresholds are enforced (branches 80, functions 90, lines and
   statements 95). Add tests to meet them rather than lowering the thresholds.
