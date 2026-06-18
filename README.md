@@ -20,7 +20,7 @@ feature branch.
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/ff5a9715-accc-41a3-9962-18d2b36231fa
+https://github.com/user-attachments/assets/1fa1c9eb-5511-4d8e-b0d9-15da2761c0bd
 
 [Watch the 67-second implementation walkthrough](https://jnrahme.github.io/GameTimeTest/#demo).
 It uses the native app screenshots below with ElevenLabs narration to cover the
