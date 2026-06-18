@@ -18,6 +18,13 @@ brand-aligned, rotation-aware, typed, tested, and reviewable.
 Reviewer-facing line: a compact take-home prompt treated like a production
 feature branch.
 
+## Demo Video
+
+[Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase.mp4).
+It uses the native app screenshots below with ElevenLabs narration to cover the
+purchase timeline, receipt detail, Share with Friends flow, rotation-aware UI,
+and quality gates.
+
 ## Screenshots
 
 These are not decorative mocks. They are generated from the working app and kept
