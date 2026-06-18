@@ -8,7 +8,11 @@ interface ReceiptRowProps {
   emphasized?: boolean;
 }
 
-export function ReceiptRow({ label, value, emphasized = false }: ReceiptRowProps) {
+export function ReceiptRow({
+  label,
+  value,
+  emphasized = false,
+}: ReceiptRowProps) {
   return (
     <View style={[styles.row, emphasized && styles.emphasizedRow]}>
       <Text style={[styles.label, emphasized && styles.emphasizedText]}>

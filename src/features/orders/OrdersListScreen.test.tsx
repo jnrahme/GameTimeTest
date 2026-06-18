@@ -42,14 +42,18 @@ describe('OrdersListScreen', () => {
 
     fireEvent.changeText(screen.getByLabelText('Search orders'), 'oracle');
     fireEvent.press(screen.getByRole('tab', { name: 'Upcoming' }));
-    fireEvent.press(screen.getByRole('button', { name: /lakers at warriors/i }));
+    fireEvent.press(
+      screen.getByRole('button', { name: /lakers at warriors/i }),
+    );
 
     const list = UNSAFE_getByType(FlashList);
     list.props.refreshControl.props.onRefresh();
 
     expect(defaultProps.onQueryChange).toHaveBeenCalledWith('oracle');
     expect(defaultProps.onFilterChange).toHaveBeenCalledWith('upcoming');
-    expect(defaultProps.onSelectOrder).toHaveBeenCalledWith('order-warriors-2026');
+    expect(defaultProps.onSelectOrder).toHaveBeenCalledWith(
+      'order-warriors-2026',
+    );
     expect(defaultProps.onRetry).toHaveBeenCalledTimes(1);
   });
 
@@ -80,5 +84,4 @@ describe('OrdersListScreen', () => {
 
     expect(screen.getByText('No orders match this view')).toBeTruthy();
   });
-
 });

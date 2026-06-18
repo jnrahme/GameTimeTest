@@ -37,22 +37,29 @@ describe('OrdersListContainer', () => {
     const navigation = createNavigation();
 
     render(
-      <OrdersListContainer navigation={navigation} route={{ params: undefined } as never} />,
+      <OrdersListContainer
+        navigation={navigation}
+        route={{ params: undefined } as never}
+      />,
     );
 
-    fireEvent.press(screen.getByRole('button', { name: /lakers at warriors/i }));
-
-    expect((navigation as { navigate: jest.Mock }).navigate).toHaveBeenCalledWith(
-      'OrderDetail',
-      { orderId: 'order-warriors-2026' },
+    fireEvent.press(
+      screen.getByRole('button', { name: /lakers at warriors/i }),
     );
+
+    expect(
+      (navigation as { navigate: jest.Mock }).navigate,
+    ).toHaveBeenCalledWith('OrderDetail', { orderId: 'order-warriors-2026' });
   });
 
   it('derives the filtered view from local search state', () => {
     mockUseOrders();
 
     render(
-      <OrdersListContainer navigation={createNavigation()} route={{ params: undefined } as never} />,
+      <OrdersListContainer
+        navigation={createNavigation()}
+        route={{ params: undefined } as never}
+      />,
     );
 
     fireEvent.changeText(screen.getByLabelText('Search orders'), 'oracle');
@@ -71,7 +78,10 @@ describe('OrdersListContainer', () => {
     });
 
     render(
-      <OrdersListContainer navigation={createNavigation()} route={{ params: undefined } as never} />,
+      <OrdersListContainer
+        navigation={createNavigation()}
+        route={{ params: undefined } as never}
+      />,
     );
 
     expect(screen.getByText('Orders could not load')).toBeTruthy();

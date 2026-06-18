@@ -52,10 +52,14 @@ export function getFilteredOrders(orders: Order[], query: OrderQuery) {
     });
 }
 
-export function getOrderSummary(orders: Order[], now = new Date()): OrderSummary {
+export function getOrderSummary(
+  orders: Order[],
+  now = new Date(),
+): OrderSummary {
   return {
     totalOrders: orders.length,
-    upcomingOrders: orders.filter((order) => isUpcomingOrder(order, now)).length,
+    upcomingOrders: orders.filter((order) => isUpcomingOrder(order, now))
+      .length,
     totalSpent: orders.reduce((sum, order) => sum + order.receipt.total, 0),
   };
 }

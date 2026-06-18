@@ -17,7 +17,10 @@ export function OrdersListContainer({ navigation }: Props) {
   const [filter, setFilter] = useState<OrderFilter>('all');
 
   const ordersQuery = useOrders();
-  const orders = ordersQuery.data?.orders ?? [];
+  const orders = useMemo(
+    () => ordersQuery.data?.orders ?? [],
+    [ordersQuery.data],
+  );
 
   const visibleOrders = useMemo(
     () => getFilteredOrders(orders, { query, filter }),
@@ -33,13 +36,17 @@ export function OrdersListContainer({ navigation }: Props) {
       filter={filter}
       summary={summary}
       isLoading={ordersQuery.isPending}
-      error={ordersQuery.isError ? getErrorMessage(ordersQuery.error) : undefined}
+      error={
+        ordersQuery.isError ? getErrorMessage(ordersQuery.error) : undefined
+      }
       onQueryChange={setQuery}
       onFilterChange={setFilter}
       onRetry={() => {
         void ordersQuery.refetch();
       }}
-      onSelectOrder={(orderId) => navigation.navigate('OrderDetail', { orderId })}
+      onSelectOrder={(orderId) =>
+        navigation.navigate('OrderDetail', { orderId })
+      }
     />
   );
 }

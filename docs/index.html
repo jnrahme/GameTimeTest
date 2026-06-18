@@ -51,6 +51,7 @@
 
       img {
         display: block;
+        height: auto;
         max-width: 100%;
       }
 
@@ -726,8 +727,8 @@
               />
             </div>
             <div class="proof-row">
-              <div class="proof"><strong>41</strong><span>Passing tests</span></div>
-              <div class="proof"><strong>13</strong><span>Jest suites</span></div>
+              <div class="proof"><strong>46</strong><span>Passing tests</span></div>
+              <div class="proof"><strong>14</strong><span>Jest suites</span></div>
               <div class="proof"><strong>95</strong><span>Line coverage gate</span></div>
             </div>
           </aside>
@@ -753,9 +754,9 @@
                 <h3>Mobile first, not web disguised as mobile.</h3>
                 <p>
                   The React Native app uses safe areas, React Navigation native
-                  stack behavior, native share APIs, accessible press targets,
-                  and orientation-aware layouts. The web preview exists only as a
-                  reviewer convenience.
+                  stack behavior, cached event artwork, native share APIs,
+                  accessible press targets, and orientation-aware layouts. The
+                  web preview exists only as a reviewer convenience.
                 </p>
               </article>
               <article class="card metric-card">
@@ -832,7 +833,7 @@
                   <div class="layer-nodes">
                     <div class="node">Runtime schemas with inferred TypeScript types</div>
                     <div class="node">Selectors, receipt formatters, and ICS generation</div>
-                    <div class="node">FlashList timeline, receipt detail, and GameTime tokens</div>
+                    <div class="node">FlashList timeline, cached event artwork, and GameTime tokens</div>
                   </div>
                 </div>
               </div>
@@ -985,9 +986,10 @@
               <div class="eyebrow"><span class="spark" aria-hidden="true"></span> Quality Gates</div>
               <h2>Evidence before claims.</h2>
               <p>
-                The implementation is backed by strict typing, tests around the
-                highest-risk business behavior, enforced coverage thresholds,
-                Expo compatibility checks, and native simulator screenshots.
+                The implementation is backed by formatting checks, linting,
+                strict typing, tests around the highest-risk business behavior,
+                enforced coverage thresholds, Expo compatibility checks, and
+                native simulator screenshots.
               </p>
             </div>
             <div class="grid grid-2">
@@ -1046,9 +1048,9 @@
                 <span class="number">CI</span>
                 <h3>Verification is automated.</h3>
                 <p>
-                  GitHub Actions installs with Node 22, runs strict TypeScript,
-                  executes Jest with coverage thresholds, and checks Expo SDK
-                  package compatibility.
+                  GitHub Actions installs with Node 22, checks formatting, runs
+                  strict TypeScript, lints the source, executes Jest with
+                  coverage thresholds, and checks Expo SDK package compatibility.
                 </p>
               </article>
               <article class="card metric-card">
@@ -1119,9 +1121,9 @@
                 <small>Verification</small>
                 <strong>Evidence before claims</strong>
                 <p>
-                  The workflow runs typecheck, Jest coverage gates, Expo package
-                  compatibility, native screenshots, CI, and Pages checks before
-                  presenting the work as review-ready.
+                  The workflow runs formatting checks, lint, typecheck, Jest
+                  coverage gates, Expo package compatibility, native screenshots,
+                  CI, and Pages checks before presenting the work as review-ready.
                 </p>
               </article>
             </div>

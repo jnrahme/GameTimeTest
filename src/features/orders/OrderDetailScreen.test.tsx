@@ -1,4 +1,9 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 
 import { mockOrders } from '../../data/mockOrders';
 import { shareCalendarEvent } from '../../services/shareCalendar';
@@ -31,10 +36,14 @@ describe('OrderDetailScreen', () => {
     expect(screen.getByText('Sports')).toBeTruthy();
     expect(screen.getByText('$429.96')).toBeTruthy();
 
-    fireEvent.press(screen.getByRole('button', { name: /share with friends/i }));
+    fireEvent.press(
+      screen.getByRole('button', { name: /share with friends/i }),
+    );
 
     await waitFor(() => {
-      expect(screen.getByText('Calendar details copied to the clipboard.')).toBeTruthy();
+      expect(
+        screen.getByText('Calendar details copied to the clipboard.'),
+      ).toBeTruthy();
     });
     expect(shareCalendarEvent).toHaveBeenCalledWith(mockOrders[0]);
   });
@@ -61,13 +70,7 @@ describe('OrderDetailScreen', () => {
   it('renders the loading state and supports returning to orders', () => {
     const onBack = jest.fn();
 
-    render(
-      <OrderDetailScreen
-        isLoading
-        onBack={onBack}
-        onRetry={jest.fn()}
-      />,
-    );
+    render(<OrderDetailScreen isLoading onBack={onBack} onRetry={jest.fn()} />);
 
     fireEvent.press(screen.getByRole('button', { name: 'Orders' }));
 
@@ -75,9 +78,9 @@ describe('OrderDetailScreen', () => {
   });
 
   it('shows share failure feedback when sharing rejects', async () => {
-    jest.mocked(shareCalendarEvent).mockRejectedValueOnce(
-      new Error('share unavailable'),
-    );
+    jest
+      .mocked(shareCalendarEvent)
+      .mockRejectedValueOnce(new Error('share unavailable'));
 
     render(
       <OrderDetailScreen
@@ -88,10 +91,14 @@ describe('OrderDetailScreen', () => {
       />,
     );
 
-    fireEvent.press(screen.getByRole('button', { name: /share with friends/i }));
+    fireEvent.press(
+      screen.getByRole('button', { name: /share with friends/i }),
+    );
 
     await waitFor(() => {
-      expect(screen.getByText('Sharing is not available in this environment.')).toBeTruthy();
+      expect(
+        screen.getByText('Sharing is not available in this environment.'),
+      ).toBeTruthy();
     });
   });
 });

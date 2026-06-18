@@ -1,12 +1,8 @@
 import { CalendarDays, ChevronRight, MapPin } from 'lucide-react-native';
-import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import { CachedImageBackground } from '../../components/CachedImageBackground';
 
 import {
   formatEventDate,
@@ -14,7 +10,13 @@ import {
   formatSeatSummary,
 } from '../../domain/orders/formatters';
 import { Order } from '../../domain/orders/types';
-import { colors, radii, shadows, spacing, typography } from '../../theme/tokens';
+import {
+  colors,
+  radii,
+  shadows,
+  spacing,
+  typography,
+} from '../../theme/tokens';
 import { StatusPill } from '../../components/StatusPill';
 
 interface OrderCardProps {
@@ -30,11 +32,10 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
       onPress={() => onPress(order.id)}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
-      <ImageBackground
-        accessibilityIgnoresInvertColors
+      <CachedImageBackground
         accessibilityLabel={`${order.event.name} event image`}
         imageStyle={styles.image}
-        source={{ uri: order.event.imageUrl }}
+        uri={order.event.imageUrl}
         style={styles.imageFrame}
       >
         <LinearGradient
@@ -47,12 +48,14 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
             {order.event.name}
           </Text>
         </View>
-      </ImageBackground>
+      </CachedImageBackground>
 
       <View style={styles.details}>
         <View style={styles.metaRow}>
           <CalendarDays color={colors.accent} size={18} strokeWidth={2.2} />
-          <Text style={styles.metaText}>{formatEventDate(order.event.datetime)}</Text>
+          <Text style={styles.metaText}>
+            {formatEventDate(order.event.datetime)}
+          </Text>
         </View>
         <View style={styles.metaRow}>
           <MapPin color={colors.accent} size={18} strokeWidth={2.2} />
@@ -63,8 +66,15 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
 
         <View style={styles.footer}>
           <View style={styles.footerText}>
-            <Text style={styles.seatText}>{formatSeatSummary(order.seats)}</Text>
-            <Text style={styles.totalText}>{formatMoney(order.receipt.total)}</Text>
+            <Text style={styles.seatText}>
+              {formatSeatSummary(order.seats)}
+            </Text>
+            <Text
+              maxFontSizeMultiplier={typography.displayMaxScale}
+              style={styles.totalText}
+            >
+              {formatMoney(order.receipt.total)}
+            </Text>
           </View>
           <View style={styles.chevronFrame}>
             <ChevronRight color={colors.accent} size={20} strokeWidth={2.4} />

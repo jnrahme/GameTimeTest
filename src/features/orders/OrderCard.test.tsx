@@ -12,7 +12,9 @@ describe('OrderCard', () => {
     expect(screen.getByText('Lakers at Warriors')).toBeTruthy();
     expect(screen.getByText('$429.96')).toBeTruthy();
 
-    fireEvent.press(screen.getByRole('button', { name: /lakers at warriors/i }));
+    fireEvent.press(
+      screen.getByRole('button', { name: /lakers at warriors/i }),
+    );
 
     expect(onPress).toHaveBeenCalledWith('order-warriors-2026');
   });

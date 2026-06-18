@@ -33,6 +33,16 @@ describe('order selectors', () => {
     ]);
   });
 
+  it('filters past orders relative to a supplied clock', () => {
+    const orders = getFilteredOrders(mockOrders, {
+      filter: 'past',
+      query: '',
+      now,
+    });
+
+    expect(orders.map((order) => order.id)).toEqual(['order-giants-2026']);
+  });
+
   it('searches across event, venue, confirmation, and status fields', () => {
     const orders = getFilteredOrders(mockOrders, {
       filter: 'all',

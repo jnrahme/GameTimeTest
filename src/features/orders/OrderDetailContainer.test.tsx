@@ -28,7 +28,13 @@ function renderDetail(navigation = { goBack: jest.fn() }) {
   return render(
     <OrderDetailContainer
       navigation={navigation as never}
-      route={{ params: { orderId: 'order-warriors-2026' }, key: 'k', name: 'OrderDetail' } as never}
+      route={
+        {
+          params: { orderId: 'order-warriors-2026' },
+          key: 'k',
+          name: 'OrderDetail',
+        } as never
+      }
     />,
   );
 }

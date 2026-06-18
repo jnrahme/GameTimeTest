@@ -56,12 +56,16 @@ export function formatSeatSummary(seats: Seat[]) {
 
 export function formatPayment(payment: PaymentSummary) {
   if (payment.method === 'applepay') {
-    return payment.lastFour ? `Apple Pay ending in ${payment.lastFour}` : 'Apple Pay';
+    return payment.lastFour
+      ? `Apple Pay ending in ${payment.lastFour}`
+      : 'Apple Pay';
   }
 
   if (payment.method === 'creditcard') {
     const cardType = payment.cardType ? titleCase(payment.cardType) : 'Card';
-    return payment.lastFour ? `${cardType} ending in ${payment.lastFour}` : cardType;
+    return payment.lastFour
+      ? `${cardType} ending in ${payment.lastFour}`
+      : cardType;
   }
 
   return {

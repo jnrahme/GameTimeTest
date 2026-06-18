@@ -92,8 +92,8 @@ make verify
 make expo-check
 ```
 
-`make verify` runs TypeScript in strict mode plus the Jest suite with coverage
-thresholds: 95% statements, 95% lines, 90% functions, and 80% branches.
+`make verify` runs TypeScript in strict mode, ESLint, and the Jest suite with
+coverage thresholds: 95% statements, 95% lines, 90% functions, and 80% branches.
 `make expo-check` verifies Expo SDK package compatibility.
 
 ## Architecture
@@ -147,7 +147,7 @@ and responsive layouts that also hold up in Expo's web preview.
 flowchart LR
   Rules[AGENTS.md + Node 22] --> Build[Expo React Native implementation]
   Build --> Verify[make verify]
-  Verify --> Coverage[43 tests + coverage gate]
+  Verify --> Coverage[46 tests + coverage gate]
   Coverage --> ExpoCheck[make expo-check]
   ExpoCheck --> Screens[Native iOS portrait + landscape screenshots]
   Screens --> CI[GitHub Actions CI]

@@ -55,9 +55,14 @@ describe('order formatters', () => {
 
   it('includes discounts in receipt line items', () => {
     expect(getReceiptLineItems(mockOrders[0])).toEqual(
-      expect.arrayContaining([
-        { label: 'Promo DUBS20', value: '-$20.00' },
-      ]),
+      expect.arrayContaining([{ label: 'Promo DUBS20', value: '-$20.00' }]),
     );
+  });
+
+  it('omits the promo line when the order has no discount', () => {
+    const lines = getReceiptLineItems(mockOrders[1]);
+
+    expect(lines).toHaveLength(3);
+    expect(lines.some((line) => line.label.startsWith('Promo'))).toBe(false);
   });
 });

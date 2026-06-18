@@ -11,7 +11,6 @@ import {
 } from 'lucide-react-native';
 import { ComponentType, useState } from 'react';
 import {
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,6 +19,7 @@ import {
 } from 'react-native';
 
 import { ActionButton } from '../../components/ActionButton';
+import { CachedImageBackground } from '../../components/CachedImageBackground';
 import { ReceiptRow } from '../../components/ReceiptRow';
 import { SkeletonBlock } from '../../components/SkeletonBlock';
 import { StatusPill } from '../../components/StatusPill';
@@ -34,7 +34,13 @@ import {
 } from '../../domain/orders/formatters';
 import { Order } from '../../domain/orders/types';
 import { shareCalendarEvent, ShareResult } from '../../services/shareCalendar';
-import { colors, radii, shadows, spacing, typography } from '../../theme/tokens';
+import {
+  colors,
+  radii,
+  shadows,
+  spacing,
+  typography,
+} from '../../theme/tokens';
 
 interface OrderDetailScreenProps {
   order?: Order;
@@ -80,7 +86,12 @@ export function OrderDetailScreen({
   if (error || !order) {
     return (
       <View style={styles.errorScreen}>
-        <ActionButton icon={ArrowLeft} title="Back" variant="secondary" onPress={onBack} />
+        <ActionButton
+          icon={ArrowLeft}
+          title="Back"
+          variant="secondary"
+          onPress={onBack}
+        />
         <View style={styles.errorPanel}>
           <Text style={styles.errorTitle}>Receipt unavailable</Text>
           <Text style={styles.errorBody}>
@@ -100,7 +111,8 @@ export function OrderDetailScreen({
     failed: 'Try Again',
   }[shareState];
 
-  const ShareIcon = shareState === 'shared' || shareState === 'copied' ? Check : CalendarPlus;
+  const ShareIcon =
+    shareState === 'shared' || shareState === 'copied' ? Check : CalendarPlus;
 
   return (
     <ScrollView
@@ -118,12 +130,14 @@ export function OrderDetailScreen({
 
         <View style={[styles.detailGrid, isWide && styles.detailGridWide]}>
           <View style={styles.mainColumn}>
-            <ImageBackground
-              accessibilityIgnoresInvertColors
+            <CachedImageBackground
               accessibilityLabel={`${order.event.name} event image`}
               imageStyle={styles.heroImage}
-              source={{ uri: order.event.imageUrl }}
-              style={[styles.detailHero, isLandscape && styles.detailHeroLandscape]}
+              uri={order.event.imageUrl}
+              style={[
+                styles.detailHero,
+                isLandscape && styles.detailHeroLandscape,
+              ]}
             >
               <LinearGradient
                 colors={['rgba(23,20,18,0.05)', 'rgba(23,20,18,0.78)']}
@@ -133,6 +147,7 @@ export function OrderDetailScreen({
                 <StatusPill status={order.status} />
                 <View style={styles.heroTextBlock}>
                   <Text
+                    maxFontSizeMultiplier={typography.displayMaxScale}
                     style={[
                       styles.detailTitle,
                       isLandscape && styles.detailTitleLandscape,
@@ -146,7 +161,7 @@ export function OrderDetailScreen({
                   </View>
                 </View>
               </View>
-            </ImageBackground>
+            </CachedImageBackground>
 
             <View style={styles.infoBand}>
               <InfoTile
@@ -174,7 +189,10 @@ export function OrderDetailScreen({
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Event details</Text>
               <View style={styles.detailRows}>
-                <DetailRow label="When" value={formatEventDate(order.event.datetime)} />
+                <DetailRow
+                  label="When"
+                  value={formatEventDate(order.event.datetime)}
+                />
                 <DetailRow label="Where" value={order.event.venue} />
                 <DetailRow label="Seats" value={formatSeatList(order.seats)} />
                 <DetailRow
@@ -216,7 +234,11 @@ export function OrderDetailScreen({
 
             <View style={styles.shareCard}>
               <View style={styles.shareIconFrame}>
-                <CalendarPlus color={colors.accent} size={24} strokeWidth={2.2} />
+                <CalendarPlus
+                  color={colors.accent}
+                  size={24}
+                  strokeWidth={2.2}
+                />
               </View>
               <Text style={styles.shareTitle}>Bring the group in</Text>
               <Text style={styles.shareBody}>
@@ -250,7 +272,12 @@ export function OrderDetailScreen({
 function DetailLoadingState({ onBack }: { onBack: () => void }) {
   return (
     <View style={styles.loadingScreen}>
-      <ActionButton icon={ArrowLeft} title="Orders" variant="secondary" onPress={onBack} />
+      <ActionButton
+        icon={ArrowLeft}
+        title="Orders"
+        variant="secondary"
+        onPress={onBack}
+      />
       <SkeletonBlock height={340} />
       <SkeletonBlock height={130} />
       <SkeletonBlock height={260} />

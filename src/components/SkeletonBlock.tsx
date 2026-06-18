@@ -8,7 +8,11 @@ interface SkeletonBlockProps {
   style?: ViewStyle;
 }
 
-export function SkeletonBlock({ height, width = '100%', style }: SkeletonBlockProps) {
+export function SkeletonBlock({
+  height,
+  width = '100%',
+  style,
+}: SkeletonBlockProps) {
   return <View style={[styles.block, { height, width }, style]} />;
 }
 

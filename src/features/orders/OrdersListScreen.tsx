@@ -3,7 +3,6 @@ import { Search, Sparkles } from 'lucide-react-native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import {
   ActivityIndicator,
-  ImageBackground,
   Pressable,
   RefreshControl,
   StyleSheet,
@@ -15,11 +14,18 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { ActionButton } from '../../components/ActionButton';
+import { CachedImageBackground } from '../../components/CachedImageBackground';
 import { SkeletonBlock } from '../../components/SkeletonBlock';
 import { formatMoney } from '../../domain/orders/formatters';
 import { OrderFilter, Order } from '../../domain/orders/types';
 import { OrderSummary } from '../../domain/orders/selectors';
-import { colors, radii, shadows, spacing, typography } from '../../theme/tokens';
+import {
+  colors,
+  radii,
+  shadows,
+  spacing,
+  typography,
+} from '../../theme/tokens';
 import { OrderCard } from './OrderCard';
 
 interface OrdersListScreenProps {
@@ -35,7 +41,7 @@ interface OrdersListScreenProps {
   onRetry: () => void;
 }
 
-const filters: Array<{ label: string; value: OrderFilter }> = [
+const filters: { label: string; value: OrderFilter }[] = [
   { label: 'All', value: 'all' },
   { label: 'Upcoming', value: 'upcoming' },
   { label: 'Past', value: 'past' },
@@ -79,11 +85,10 @@ export function OrdersListScreen({
 
   const listHeader = (
     <View style={styles.headerStack}>
-      <ImageBackground
-        accessibilityIgnoresInvertColors
+      <CachedImageBackground
         accessibilityLabel="Featured event image"
         imageStyle={styles.heroImage}
-        source={{ uri: heroImageUrl }}
+        uri={heroImageUrl}
         style={[styles.hero, isLandscape && styles.heroLandscape]}
       >
         <LinearGradient
@@ -101,11 +106,17 @@ export function OrdersListScreen({
               <Text style={styles.eyebrowText}>GameTime purchase history</Text>
             </View>
             <Text
-              style={[styles.heroTitle, isLandscape && styles.heroTitleLandscape]}
+              maxFontSizeMultiplier={typography.displayMaxScale}
+              style={[
+                styles.heroTitle,
+                isLandscape && styles.heroTitleLandscape,
+              ]}
             >
               Your nights out, accounted for.
             </Text>
-            <Text style={[styles.heroBody, isLandscape && styles.heroBodyLandscape]}>
+            <Text
+              style={[styles.heroBody, isLandscape && styles.heroBodyLandscape]}
+            >
               Review every ticket, receipt, seat, and share-ready calendar
               invite from one fast order timeline.
             </Text>
@@ -118,14 +129,17 @@ export function OrdersListScreen({
             ]}
           >
             <SummaryMetric label="Orders" value={`${summary.totalOrders}`} />
-            <SummaryMetric label="Upcoming" value={`${summary.upcomingOrders}`} />
+            <SummaryMetric
+              label="Upcoming"
+              value={`${summary.upcomingOrders}`}
+            />
             <SummaryMetric
               label="Total spent"
               value={formatMoney(summary.totalSpent)}
             />
           </View>
         </View>
-      </ImageBackground>
+      </CachedImageBackground>
 
       <View style={styles.toolbar}>
         <View style={styles.searchBox}>
@@ -215,7 +229,12 @@ export function OrdersListScreen({
 function SummaryMetric({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.metric}>
-      <Text style={styles.metricValue}>{value}</Text>
+      <Text
+        maxFontSizeMultiplier={typography.displayMaxScale}
+        style={styles.metricValue}
+      >
+        {value}
+      </Text>
       <Text style={styles.metricLabel}>{label}</Text>
     </View>
   );

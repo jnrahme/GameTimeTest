@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 import { mockOrders } from '../../data/mockOrders';
 import { ordersApi } from '../../services/ordersApi';
-import { useOrder, useOrders } from './queries';
+import { getErrorMessage, useOrder, useOrders } from './queries';
 
 jest.mock('../../services/ordersApi', () => ({
   ordersApi: {
@@ -17,9 +17,12 @@ function wrapper() {
   const client = new QueryClient({
     defaultOptions: { queries: { gcTime: Infinity, retry: false } },
   });
-  return ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={client}>{children}</QueryClientProvider>
-  );
+  function QueryWrapper({ children }: { children: ReactNode }) {
+    return (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    );
+  }
+  return QueryWrapper;
 }
 
 describe('orders queries', () => {
@@ -46,5 +49,10 @@ describe('orders queries', () => {
 
     renderHook(() => useOrder(''), { wrapper: wrapper() });
     expect(ordersApi.getOrder).toHaveBeenCalledTimes(1);
+  });
+
+  it('getErrorMessage unwraps Errors and falls back for non-Errors', () => {
+    expect(getErrorMessage(new Error('network down'))).toBe('network down');
+    expect(getErrorMessage('offline')).toBe('Something went wrong.');
   });
 });

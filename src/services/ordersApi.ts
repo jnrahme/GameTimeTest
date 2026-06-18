@@ -3,7 +3,11 @@ import {
   GetOrderResponseSchema,
   GetOrdersResponseSchema,
 } from '../domain/orders/schema';
-import { GetOrderResponse, GetOrdersResponse, Order } from '../domain/orders/types';
+import {
+  GetOrderResponse,
+  GetOrdersResponse,
+  Order,
+} from '../domain/orders/types';
 
 export interface OrdersApi {
   getOrders: () => Promise<GetOrdersResponse>;

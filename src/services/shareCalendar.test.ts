@@ -72,7 +72,9 @@ describe('shareCalendarEvent', () => {
 
     await expect(shareCalendarEvent(mockOrders[0])).resolves.toBe('copied');
 
-    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('BEGIN:VEVENT'));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining('BEGIN:VEVENT'),
+    );
     expect(Share.share).not.toHaveBeenCalled();
   });
 

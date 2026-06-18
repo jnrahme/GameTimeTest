@@ -51,6 +51,9 @@ export const typography = {
     section: 24,
     hero: 36,
   },
+  // Cap font scaling on large display text so big accessibility text sizes do
+  // not break fixed layouts. Body text is left uncapped to scale freely.
+  displayMaxScale: 1.3,
 };
 
 export const shadows = {
