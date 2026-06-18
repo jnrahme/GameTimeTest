@@ -3,6 +3,7 @@
     "name": "GameTime Order History",
     "slug": "gametime-order-history",
     "version": "1.0.0",
+    "scheme": "gametime",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
