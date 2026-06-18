@@ -1,15 +1,17 @@
 {
   "expo": {
-    "name": "gametime-scaffold",
-    "slug": "gametime-scaffold",
+    "name": "GameTime Order History",
+    "slug": "gametime-order-history",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "bundleIdentifier": "com.jnrahme.gametimeorderhistory",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.jnrahme.gametimeorderhistory",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
