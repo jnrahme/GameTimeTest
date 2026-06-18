@@ -20,7 +20,7 @@ feature branch.
 
 ## Demo Video
 
-[![Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase-poster.jpg)](https://jnrahme.github.io/GameTimeTest/#demo)
+https://github.com/user-attachments/assets/ff5a9715-accc-41a3-9962-18d2b36231fa
 
 [Watch the 67-second implementation walkthrough](https://jnrahme.github.io/GameTimeTest/#demo).
 It uses the native app screenshots below with ElevenLabs narration to cover the
