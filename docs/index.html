@@ -996,6 +996,23 @@
                 </p>
               </article>
               <article class="card">
+                <h3>expo-image for cached artwork.</h3>
+                <p>
+                  Remote event images load through a shared
+                  CachedImageBackground: memory and disk caching, a blurhash
+                  placeholder, and a short fade. The heaviest content on the
+                  screen never re-downloads or flashes blank on scroll.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Dynamic type without broken layouts.</h3>
+                <p>
+                  Large display text is capped with a maximum font multiplier so
+                  big accessibility text sizes never overflow fixed layouts,
+                  while body text stays free to scale.
+                </p>
+              </article>
+              <article class="card">
                 <h3>Native screenshots prove the surface.</h3>
                 <p>
                   The README uses iPhone simulator captures for the primary
@@ -1065,6 +1082,14 @@
                 </p>
               </article>
               <article class="card">
+                <h3>Linting and formatting are enforced.</h3>
+                <p>
+                  ESLint (expo config) and Prettier run locally and in CI.
+                  `npm run verify` chains strict typing, linting, and tests, and
+                  CI fails on any unformatted file.
+                </p>
+              </article>
+              <article class="card">
                 <h3>Runtime schemas protect the boundaries.</h3>
                 <p>
                   Zod validates mock API responses at the trust boundary while
@@ -1076,8 +1101,8 @@
                 <h3>Expo compatibility is verified.</h3>
                 <p>
                   Node 22, Expo SDK 56, React Native 0.85, React Navigation,
-                  TanStack Query, FlashList, and SDK-matched packages are encoded
-                  in the repo and checked before push.
+                  TanStack Query, FlashList, expo-image, and SDK-matched packages
+                  are encoded in the repo and checked before push.
                 </p>
               </article>
               <article class="card">
@@ -1090,6 +1115,7 @@
               </article>
             </div>
             <pre class="code-strip" aria-label="Verification commands"><code><b>$</b> nvm use
+<b>$</b> npm run format
 <b>$</b> make verify
 <b>$</b> make expo-check</code></pre>
           </div>
