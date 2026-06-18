@@ -5,9 +5,9 @@ site.
 
 ## Description
 
-GameTime-themed React Native order history take-home with typed mock API, receipt
-detail, calendar sharing, rotation-aware layouts, tests, and an implementation
-showcase.
+GameTime-themed React Native order history take-home with Zod-validated mock API,
+receipt detail, calendar sharing, FlashList timeline, rotation-aware layouts,
+coverage-gated tests, and a hosted implementation showcase.
 
 ## Homepage
 
@@ -25,6 +25,8 @@ https://jnrahme.github.io/GameTimeTest/
 - jest
 - accessibility
 - github-actions
+- flashlist
+- zod
 
 ## Public Surface Checklist
 

@@ -1,4 +1,8 @@
 import { mockOrders } from '../data/mockOrders';
+import {
+  GetOrderResponseSchema,
+  GetOrdersResponseSchema,
+} from '../domain/orders/schema';
 import { GetOrderResponse, GetOrdersResponse, Order } from '../domain/orders/types';
 
 export interface OrdersApi {
@@ -22,11 +26,12 @@ export function createMockOrdersApi({
       await delay(latencyMs);
       assertNetwork(shouldFail);
 
-      return {
+      // Validate at the trust boundary: a real backend response is `unknown`
+      // until proven otherwise. `.parse` throws a typed error on drift, which
+      // the query layer surfaces as an error state.
+      return GetOrdersResponseSchema.parse({
         orders,
-        page: 1,
-        perPage: orders.length,
-      };
+      });
     },
 
     async getOrder(orderId: string) {
@@ -39,7 +44,7 @@ export function createMockOrdersApi({
         throw new Error(`Order ${orderId} was not found`);
       }
 
-      return { order };
+      return GetOrderResponseSchema.parse({ order });
     },
   };
 }

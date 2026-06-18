@@ -32,6 +32,7 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
     >
       <ImageBackground
         accessibilityIgnoresInvertColors
+        accessibilityLabel={`${order.event.name} event image`}
         imageStyle={styles.image}
         source={{ uri: order.event.imageUrl }}
         style={styles.imageFrame}
@@ -50,11 +51,11 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
 
       <View style={styles.details}>
         <View style={styles.metaRow}>
-          <CalendarDays color={colors.coralDark} size={18} strokeWidth={2.2} />
+          <CalendarDays color={colors.accent} size={18} strokeWidth={2.2} />
           <Text style={styles.metaText}>{formatEventDate(order.event.datetime)}</Text>
         </View>
         <View style={styles.metaRow}>
-          <MapPin color={colors.tealDark} size={18} strokeWidth={2.2} />
+          <MapPin color={colors.accent} size={18} strokeWidth={2.2} />
           <Text numberOfLines={1} style={styles.metaText}>
             {order.event.venue}
           </Text>

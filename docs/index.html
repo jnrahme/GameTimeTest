@@ -719,9 +719,9 @@
               />
             </div>
             <div class="proof-row">
-              <div class="proof"><strong>15</strong><span>Passing tests</span></div>
-              <div class="proof"><strong>22</strong><span>Node baseline</span></div>
-              <div class="proof"><strong>56</strong><span>Expo SDK</span></div>
+              <div class="proof"><strong>42</strong><span>Passing tests</span></div>
+              <div class="proof"><strong>95</strong><span>Line coverage gate</span></div>
+              <div class="proof"><strong>80</strong><span>Branch coverage gate</span></div>
             </div>
           </aside>
         </div>
@@ -763,9 +763,9 @@
                 <span class="number">03</span>
                 <h3>Architecture that is easy to replace.</h3>
                 <p>
-                  Mock endpoints live behind a service boundary, domain behavior
-                  is pure TypeScript, and screens consume controller state instead
-                  of owning business logic.
+                  Mock endpoints live behind a validated service boundary, domain
+                  behavior is pure TypeScript, and screens consume controller
+                  state instead of owning business logic.
                 </p>
               </article>
             </div>
@@ -806,15 +806,15 @@
                 <div class="layer-row">
                   <div class="layer-label">Services</div>
                   <div class="layer-nodes">
-                    <div class="node">GET /orders mock boundary</div>
-                    <div class="node">GET /orders/:orderId mock boundary</div>
+                    <div class="node">Zod-validated GET /orders boundary</div>
+                    <div class="node">Zod-validated GET /orders/:orderId boundary</div>
                     <div class="node">Native and web share adapter</div>
                   </div>
                 </div>
                 <div class="layer-row">
                   <div class="layer-label">Domain</div>
                   <div class="layer-nodes">
-                    <div class="node">Prompt-aligned Order, Event, Receipt types</div>
+                    <div class="node">Runtime schemas with inferred types</div>
                     <div class="node">Selectors and filtering</div>
                     <div class="node">ICS calendar generation</div>
                   </div>
@@ -883,7 +883,7 @@
               <div class="timeline">
                 <div class="timeline-item">
                   <strong>Portrait</strong>
-                  <span>Prioritizes thumb-friendly scanning, search, filters, and image-led order cards.</span>
+                  <span>Prioritizes thumb-friendly scanning, search, filters, pull-to-refresh, and image-led order cards.</span>
                 </div>
                 <div class="timeline-item">
                   <strong>Landscape</strong>
@@ -913,8 +913,9 @@
               <h2>Evidence before claims.</h2>
               <p>
                 The implementation is backed by strict typing, tests around the
-                highest-risk business behavior, Expo compatibility checks, and
-                visual inspection in mobile viewports.
+                highest-risk business behavior, enforced coverage thresholds,
+                Expo compatibility checks, and visual inspection in mobile
+                viewports.
               </p>
             </div>
             <div class="grid grid-2">
@@ -922,28 +923,32 @@
                 <h3>Tests target behavior, not snapshots.</h3>
                 <p>
                   Coverage validates calendar generation, receipt formatting,
-                  selectors, mock API failures, and an interactive order card path.
+                  selectors, controller retries, mock API validation, share
+                  fallbacks, and list/detail interactions.
                 </p>
               </article>
               <article class="card">
-                <h3>Strict TypeScript protects the boundaries.</h3>
+                <h3>Runtime schemas protect the boundaries.</h3>
                 <p>
-                  Domain models follow the take-home prompt, and runtime adapters
-                  expose narrow interfaces so UI and networking stay decoupled.
+                  Zod validates mock API responses at the trust boundary while
+                  TypeScript types are inferred from the same schemas to prevent
+                  contract drift.
                 </p>
               </article>
               <article class="card">
                 <h3>Expo compatibility is verified.</h3>
                 <p>
-                  Node 22, Expo SDK 56, React Native 0.85, and SDK-matched
-                  packages are encoded in the repo and checked before push.
+                  Node 22, Expo SDK 56, React Native 0.85, FlashList, and
+                  SDK-matched packages are encoded in the repo and checked before
+                  push.
                 </p>
               </article>
               <article class="card">
-                <h3>Accessibility is designed into primitives.</h3>
+                <h3>Mobile resilience is built in.</h3>
                 <p>
-                  Buttons use roles and labels, status chips include text, touch
-                  targets meet mobile sizing, and text wraps instead of clipping.
+                  Buttons use roles and labels, status chips include text,
+                  Android hardware back is handled, and an app error boundary
+                  prevents a blank failure state.
                 </p>
               </article>
             </div>
@@ -970,7 +975,8 @@
                 <h3>Verification is automated.</h3>
                 <p>
                   GitHub Actions installs with Node 22, runs strict TypeScript,
-                  executes Jest, and checks Expo SDK package compatibility.
+                  executes Jest with coverage thresholds, and checks Expo SDK
+                  package compatibility.
                 </p>
               </article>
               <article class="card metric-card">

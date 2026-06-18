@@ -1,4 +1,4 @@
-import { Order, OrderStatus, PaymentSummary, Seat } from './types';
+import { Event, Order, OrderStatus, PaymentSummary, Seat } from './types';
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
   weekday: 'short',
@@ -29,6 +29,14 @@ export function formatEventDate(isoDate: string) {
 
 export function formatPurchaseDate(isoDate: string) {
   return shortDateFormatter.format(new Date(isoDate));
+}
+
+export function formatEventCategory(category: Event['category']) {
+  return {
+    sports: 'Sports',
+    concert: 'Concert',
+    theater: 'Theater',
+  }[category];
 }
 
 export function formatSeatList(seats: Seat[]) {

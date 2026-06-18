@@ -4,6 +4,21 @@ import { getFilteredOrders, getOrderSummary } from './selectors';
 const now = new Date('2026-06-18T12:00:00-04:00');
 
 describe('order selectors', () => {
+  it('returns all orders sorted by event date when no filter is selected', () => {
+    const orders = getFilteredOrders(mockOrders, {
+      filter: 'all',
+      query: '',
+      now,
+    });
+
+    expect(orders.map((order) => order.id)).toEqual([
+      'order-symphony-2026',
+      'order-outside-lands-2026',
+      'order-warriors-2026',
+      'order-giants-2026',
+    ]);
+  });
+
   it('filters upcoming orders relative to a supplied clock', () => {
     const orders = getFilteredOrders(mockOrders, {
       filter: 'upcoming',

@@ -81,7 +81,7 @@ export const mockOrders: Order[] = [
       { section: 'Club 221', row: 'G', seat: '13' },
       { section: 'Club 221', row: 'G', seat: '14' },
     ],
-    status: 'completed',
+    status: 'refunded',
     receipt: {
       quantity: 2,
       pricePerTicket: 9650,
@@ -114,7 +114,7 @@ export const mockOrders: Order[] = [
       { section: 'Orchestra', row: 'K', seat: '5' },
       { section: 'Orchestra', row: 'K', seat: '6' },
     ],
-    status: 'confirmed',
+    status: 'cancelled',
     receipt: {
       quantity: 2,
       pricePerTicket: 13200,

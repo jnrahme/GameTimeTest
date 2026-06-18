@@ -9,6 +9,7 @@
   },
   "packageManager": "npm@10.9.8",
   "dependencies": {
+    "@shopify/flash-list": "2.0.2",
     "expo": "~56.0.12",
     "expo-linear-gradient": "~56.0.4",
     "expo-status-bar": "~56.0.4",
@@ -18,7 +19,8 @@
     "react-native": "0.85.3",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-svg": "15.15.4",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "^0.21.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@testing-library/react-native": "^13.3.3",
@@ -35,12 +37,30 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --coverage",
     "test:watch": "jest --watch",
     "verify": "npm run typecheck && npm test"
   },
   "jest": {
     "preset": "jest-expo",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "App.tsx",
+      "!src/**/*.test.{ts,tsx}",
+      "!App.test.tsx"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "text"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 90,
+        "lines": 95,
+        "statements": 95
+      }
+    },
     "testMatch": [
       "**/*.test.ts",
       "**/*.test.tsx"

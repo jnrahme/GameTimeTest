@@ -82,6 +82,12 @@ export function useOrdersController(
 
   const summary = useMemo(() => getOrderSummary(orders), [orders]);
 
+  const closeDetail = useCallback(() => {
+    setSelectedOrderId(undefined);
+    setSelectedOrder(undefined);
+    setDetailError(undefined);
+  }, []);
+
   return {
     orders,
     visibleOrders,
@@ -98,11 +104,7 @@ export function useOrdersController(
     setFilter,
     loadOrders,
     selectOrder,
-    closeDetail: () => {
-      setSelectedOrderId(undefined);
-      setSelectedOrder(undefined);
-      setDetailError(undefined);
-    },
+    closeDetail,
   };
 }
 

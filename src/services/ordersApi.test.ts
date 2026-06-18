@@ -7,8 +7,6 @@ describe('mock orders api', () => {
 
     await expect(api.getOrders()).resolves.toEqual({
       orders: mockOrders,
-      page: 1,
-      perPage: mockOrders.length,
     });
   });
 

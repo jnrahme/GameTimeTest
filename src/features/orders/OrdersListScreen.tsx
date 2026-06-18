@@ -1,9 +1,11 @@
+import { useCallback } from 'react';
 import { Search, Sparkles } from 'lucide-react-native';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import {
   ActivityIndicator,
   ImageBackground,
   Pressable,
-  ScrollView,
+  RefreshControl,
   StyleSheet,
   Text,
   TextInput,
@@ -54,137 +56,159 @@ export function OrdersListScreen({
   const { height, width } = useWindowDimensions();
   const isLandscape = width > height;
   const isWide = width >= 760;
+  const listKey = isWide ? 'wide' : 'single';
   const heroImageUrl =
     orders[0]?.event.imageUrl ??
     'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=85';
 
-  return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContent}
-      keyboardShouldPersistTaps="handled"
-      style={styles.scroll}
-    >
-      <View style={[styles.shell, isWide && styles.shellWide]}>
-        <ImageBackground
-          accessibilityIgnoresInvertColors
-          imageStyle={styles.heroImage}
-          source={{ uri: heroImageUrl }}
-          style={[styles.hero, isLandscape && styles.heroLandscape]}
+  const renderOrder = useCallback<ListRenderItem<Order>>(
+    ({ item, index }) => (
+      <View
+        style={[
+          styles.orderCell,
+          isWide && styles.orderCellWide,
+          isWide && index % 2 === 0 && styles.orderCellLeft,
+          isWide && index % 2 === 1 && styles.orderCellRight,
+        ]}
+      >
+        <OrderCard order={item} onPress={onSelectOrder} />
+      </View>
+    ),
+    [isWide, onSelectOrder],
+  );
+
+  const listHeader = (
+    <View style={styles.headerStack}>
+      <ImageBackground
+        accessibilityIgnoresInvertColors
+        accessibilityLabel="Featured event image"
+        imageStyle={styles.heroImage}
+        source={{ uri: heroImageUrl }}
+        style={[styles.hero, isLandscape && styles.heroLandscape]}
+      >
+        <LinearGradient
+          colors={['rgba(23,20,18,0.34)', 'rgba(23,20,18,0.9)']}
+          style={styles.heroGradient}
+        />
+        <View
+          style={[styles.heroInner, isLandscape && styles.heroInnerLandscape]}
         >
-          <LinearGradient
-            colors={['rgba(23,20,18,0.34)', 'rgba(23,20,18,0.9)']}
-            style={styles.heroGradient}
-          />
           <View
-            style={[styles.heroInner, isLandscape && styles.heroInnerLandscape]}
+            style={[styles.heroCopy, isLandscape && styles.heroCopyLandscape]}
           >
-            <View
-              style={[styles.heroCopy, isLandscape && styles.heroCopyLandscape]}
-            >
-              <View style={styles.eyebrow}>
-                <Sparkles color={colors.gold} size={16} strokeWidth={2.2} />
-                <Text style={styles.eyebrowText}>GameTime purchase history</Text>
-              </View>
-              <Text
-                style={[styles.heroTitle, isLandscape && styles.heroTitleLandscape]}
-              >
-                Your nights out, accounted for.
-              </Text>
-              <Text style={[styles.heroBody, isLandscape && styles.heroBodyLandscape]}>
-                Review every ticket, receipt, seat, and share-ready calendar
-                invite from one fast order timeline.
-              </Text>
+            <View style={styles.eyebrow}>
+              <Sparkles color={colors.accent} size={16} strokeWidth={2.2} />
+              <Text style={styles.eyebrowText}>GameTime purchase history</Text>
             </View>
-
-            <View
-              style={[
-                styles.summaryGrid,
-                isLandscape && styles.summaryGridLandscape,
-              ]}
+            <Text
+              style={[styles.heroTitle, isLandscape && styles.heroTitleLandscape]}
             >
-              <SummaryMetric label="Orders" value={`${summary.totalOrders}`} />
-              <SummaryMetric label="Upcoming" value={`${summary.upcomingOrders}`} />
-              <SummaryMetric
-                label="Total spent"
-                value={formatMoney(summary.totalSpent)}
-              />
-            </View>
-          </View>
-        </ImageBackground>
-
-        <View style={styles.toolbar}>
-          <View style={styles.searchBox}>
-            <Search color={colors.muted} size={19} strokeWidth={2.2} />
-            <TextInput
-              accessibilityLabel="Search orders"
-              autoCorrect={false}
-              onChangeText={onQueryChange}
-              placeholder="Search by event, venue, or confirmation"
-              placeholderTextColor={colors.subtle}
-              returnKeyType="search"
-              style={styles.searchInput}
-              value={query}
-            />
-          </View>
-
-          <View accessibilityRole="tablist" style={styles.segmentedControl}>
-            {filters.map((item) => {
-              const selected = item.value === filter;
-              return (
-                <Pressable
-                  accessibilityRole="tab"
-                  accessibilityState={{ selected }}
-                  key={item.value}
-                  onPress={() => onFilterChange(item.value)}
-                  style={[styles.segment, selected && styles.segmentSelected]}
-                >
-                  <Text
-                    style={[
-                      styles.segmentText,
-                      selected && styles.segmentTextSelected,
-                    ]}
-                  >
-                    {item.label}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
-
-        {error ? (
-          <View style={styles.statePanel}>
-            <Text style={styles.stateTitle}>Orders could not load</Text>
-            <Text style={styles.stateBody}>{error}</Text>
-            <ActionButton title="Retry" onPress={onRetry} />
-          </View>
-        ) : null}
-
-        {isLoading ? <OrdersLoadingState /> : null}
-
-        {!isLoading && !error && orders.length === 0 ? (
-          <View style={styles.statePanel}>
-            <Text style={styles.stateTitle}>No orders match this view</Text>
-            <Text style={styles.stateBody}>
-              Try a different search or switch filters to see more purchases.
+              Your nights out, accounted for.
+            </Text>
+            <Text style={[styles.heroBody, isLandscape && styles.heroBodyLandscape]}>
+              Review every ticket, receipt, seat, and share-ready calendar
+              invite from one fast order timeline.
             </Text>
           </View>
-        ) : null}
 
-        {!isLoading && !error && orders.length > 0 ? (
-          <View style={[styles.orderGrid, isWide && styles.orderGridWide]}>
-            {orders.map((order) => (
-              <View
-                key={order.id}
-                style={[styles.orderCell, isWide && styles.orderCellWide]}
-              >
-                <OrderCard order={order} onPress={onSelectOrder} />
-              </View>
-            ))}
+          <View
+            style={[
+              styles.summaryGrid,
+              isLandscape && styles.summaryGridLandscape,
+            ]}
+          >
+            <SummaryMetric label="Orders" value={`${summary.totalOrders}`} />
+            <SummaryMetric label="Upcoming" value={`${summary.upcomingOrders}`} />
+            <SummaryMetric
+              label="Total spent"
+              value={formatMoney(summary.totalSpent)}
+            />
           </View>
-        ) : null}
+        </View>
+      </ImageBackground>
+
+      <View style={styles.toolbar}>
+        <View style={styles.searchBox}>
+          <Search color={colors.muted} size={19} strokeWidth={2.2} />
+          <TextInput
+            accessibilityLabel="Search orders"
+            autoCorrect={false}
+            onChangeText={onQueryChange}
+            placeholder="Search by event, venue, or confirmation"
+            placeholderTextColor={colors.subtle}
+            returnKeyType="search"
+            style={styles.searchInput}
+            value={query}
+          />
+        </View>
+
+        <View accessibilityRole="tablist" style={styles.segmentedControl}>
+          {filters.map((item) => {
+            const selected = item.value === filter;
+            return (
+              <Pressable
+                accessibilityRole="tab"
+                accessibilityState={{ selected }}
+                key={item.value}
+                onPress={() => onFilterChange(item.value)}
+                style={[styles.segment, selected && styles.segmentSelected]}
+              >
+                <Text
+                  style={[
+                    styles.segmentText,
+                    selected && styles.segmentTextSelected,
+                  ]}
+                >
+                  {item.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
-    </ScrollView>
+    </View>
+  );
+
+  const emptyState = error ? (
+    <View style={styles.statePanel}>
+      <Text style={styles.stateTitle}>Orders could not load</Text>
+      <Text style={styles.stateBody}>{error}</Text>
+      <ActionButton title="Retry" onPress={onRetry} />
+    </View>
+  ) : isLoading && orders.length === 0 ? (
+    <OrdersLoadingState />
+  ) : (
+    <View style={styles.statePanel}>
+      <Text style={styles.stateTitle}>No orders match this view</Text>
+      <Text style={styles.stateBody}>
+        Try a different search or switch filters to see more purchases.
+      </Text>
+    </View>
+  );
+
+  return (
+    <FlashList
+      contentContainerStyle={[
+        styles.listContent,
+        isWide && styles.listContentWide,
+      ]}
+      data={error ? [] : orders}
+      keyboardShouldPersistTaps="handled"
+      key={listKey}
+      keyExtractor={(order) => order.id}
+      ListEmptyComponent={emptyState}
+      ListHeaderComponent={listHeader}
+      numColumns={isWide ? 2 : 1}
+      refreshControl={
+        <RefreshControl
+          onRefresh={onRetry}
+          refreshing={isLoading && orders.length > 0}
+          tintColor={colors.accent}
+        />
+      }
+      renderItem={renderOrder}
+      style={styles.list}
+    />
   );
 }
 
@@ -200,7 +224,7 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
 function OrdersLoadingState() {
   return (
     <View style={styles.loadingPanel}>
-      <ActivityIndicator color={colors.coralDark} />
+      <ActivityIndicator color={colors.accent} />
       <SkeletonBlock height={220} />
       <SkeletonBlock height={220} />
     </View>
@@ -214,7 +238,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   eyebrowText: {
-    color: colors.gold,
+    color: colors.accent,
     fontFamily: typography.family,
     fontSize: typography.sizes.label,
     fontWeight: '900',
@@ -304,26 +328,39 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
     fontWeight: '900',
   },
-  orderGrid: {
-    gap: spacing.lg,
-  },
-  orderGridWide: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
   orderCell: {
+    marginBottom: spacing.lg,
     width: '100%',
   },
   orderCellWide: {
-    flexBasis: '48%',
-    flexGrow: 1,
+    paddingHorizontal: spacing.sm,
+    width: '50%',
   },
-  scroll: {
+  orderCellLeft: {
+    paddingLeft: 0,
+  },
+  orderCellRight: {
+    paddingRight: 0,
+  },
+  headerStack: {
+    gap: spacing.xl,
+    marginBottom: spacing.lg,
+  },
+  list: {
     backgroundColor: colors.paper,
     flex: 1,
   },
-  scrollContent: {
+  listContent: {
+    alignSelf: 'center',
+    gap: spacing.lg,
+    maxWidth: 1140,
+    padding: spacing.lg,
     paddingBottom: spacing.xxxl,
+    width: '100%',
+  },
+  listContentWide: {
+    paddingHorizontal: spacing.xxl,
+    paddingTop: spacing.xxl,
   },
   searchBox: {
     alignItems: 'center',
@@ -344,7 +381,6 @@ const styles = StyleSheet.create({
     fontFamily: typography.family,
     fontSize: typography.sizes.body,
     minHeight: 48,
-    outlineStyle: 'none' as never,
   },
   segment: {
     alignItems: 'center',
@@ -373,17 +409,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     padding: spacing.xs,
-  },
-  shell: {
-    gap: spacing.xl,
-    marginHorizontal: 'auto' as never,
-    maxWidth: 1140,
-    padding: spacing.lg,
-    width: '100%',
-  },
-  shellWide: {
-    paddingHorizontal: spacing.xxl,
-    paddingTop: spacing.xxl,
   },
   stateBody: {
     color: colors.muted,

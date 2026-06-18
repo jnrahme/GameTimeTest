@@ -1,8 +1,10 @@
 import { mockOrders } from '../../data/mockOrders';
 import {
   formatMoney,
+  formatEventCategory,
   formatPayment,
   formatSeatSummary,
+  getStatusLabel,
   getReceiptLineItems,
 } from './formatters';
 
@@ -17,11 +19,38 @@ describe('order formatters', () => {
     );
   });
 
+  it('summarizes a single seat directly', () => {
+    expect(formatSeatSummary([mockOrders[0].seats[0]])).toBe(
+      'Sec 114, Row 12, Seat 7',
+    );
+  });
+
+  it('formats event categories for display', () => {
+    expect(formatEventCategory('concert')).toBe('Concert');
+  });
+
   it('formats payment methods with the available detail', () => {
     expect(formatPayment(mockOrders[0].payment)).toBe(
       'Apple Pay ending in 8842',
     );
     expect(formatPayment(mockOrders[1].payment)).toBe('PayPal');
+    expect(formatPayment({ method: 'applepay' })).toBe('Apple Pay');
+    expect(formatPayment({ method: 'creditcard' })).toBe('Card');
+    expect(formatPayment({ method: 'creditcard', lastFour: '1111' })).toBe(
+      'Card ending in 1111',
+    );
+    expect(formatPayment(mockOrders[2].payment)).toBe(
+      'Mastercard ending in 4242',
+    );
+    expect(formatPayment({ method: 'venmo' })).toBe('Venmo');
+  });
+
+  it('formats every order status label', () => {
+    expect(getStatusLabel('placed')).toBe('Placed');
+    expect(getStatusLabel('confirmed')).toBe('Confirmed');
+    expect(getStatusLabel('completed')).toBe('Completed');
+    expect(getStatusLabel('cancelled')).toBe('Cancelled');
+    expect(getStatusLabel('refunded')).toBe('Refunded');
   });
 
   it('includes discounts in receipt line items', () => {

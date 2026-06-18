@@ -10,9 +10,12 @@ export async function shareCalendarEvent(order: Order): Promise<ShareResult> {
   const message = `${payload.message}\n\n${payload.icsContent}`;
 
   if (Platform.OS === 'web') {
-    const webNavigator = globalThis.navigator;
+    const webNavigator =
+      typeof globalThis.navigator === 'undefined'
+        ? undefined
+        : globalThis.navigator;
 
-    if (typeof webNavigator.share === 'function') {
+    if (typeof webNavigator?.share === 'function') {
       await webNavigator.share({
         title: payload.title,
         text: message,
@@ -20,7 +23,7 @@ export async function shareCalendarEvent(order: Order): Promise<ShareResult> {
       return 'shared';
     }
 
-    if (webNavigator.clipboard) {
+    if (webNavigator?.clipboard) {
       await webNavigator.clipboard.writeText(message);
       return 'copied';
     }

@@ -1,69 +1,32 @@
-export interface Event {
-  id: string;
-  name: string;
-  datetime: string;
-  imageUrl: string;
-  venue: string;
-  category: 'sports' | 'concert' | 'theater';
-}
+import { z } from 'zod';
 
-export interface Seat {
-  section: string;
-  row: string;
-  seat: string;
-}
+import {
+  DiscountSchema,
+  EventSchema,
+  GetOrderResponseSchema,
+  GetOrdersResponseSchema,
+  OrderSchema,
+  OrderStatusSchema,
+  PaymentMethodSchema,
+  PaymentSummarySchema,
+  ReceiptSchema,
+  SeatSchema,
+} from './schema';
 
-export interface Order {
-  id: string;
-  confirmationNumber: string;
-  event: Event;
-  seats: Seat[];
-  status: OrderStatus;
-  receipt: Receipt;
-  payment: PaymentSummary;
-  purchaseDate: string;
-}
+// Domain types are inferred from the runtime schema so the two contracts
+// (compile-time and runtime) cannot drift. Edit `schema.ts`, not these.
+export type Event = z.infer<typeof EventSchema>;
+export type Seat = z.infer<typeof SeatSchema>;
+export type Order = z.infer<typeof OrderSchema>;
+export type OrderStatus = z.infer<typeof OrderStatusSchema>;
+export type Receipt = z.infer<typeof ReceiptSchema>;
+export type Discount = z.infer<typeof DiscountSchema>;
+export type PaymentSummary = z.infer<typeof PaymentSummarySchema>;
+export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
+export type GetOrdersResponse = z.infer<typeof GetOrdersResponseSchema>;
+export type GetOrderResponse = z.infer<typeof GetOrderResponseSchema>;
 
-export type OrderStatus =
-  | 'placed'
-  | 'confirmed'
-  | 'completed'
-  | 'cancelled'
-  | 'refunded';
-
-export interface Receipt {
-  quantity: number;
-  pricePerTicket: number;
-  subtotal: number;
-  fees: number;
-  salesTax: number;
-  discount?: Discount;
-  total: number;
-}
-
-export interface Discount {
-  code: string;
-  amount: number;
-}
-
-export interface PaymentSummary {
-  method: PaymentMethod;
-  lastFour?: string;
-  cardType?: string;
-}
-
-export type PaymentMethod = 'creditcard' | 'applepay' | 'paypal' | 'venmo';
-
-export interface GetOrdersResponse {
-  orders: Order[];
-  page: number;
-  perPage: number;
-}
-
-export interface GetOrderResponse {
-  order: Order;
-}
-
+// UI-only concerns that never cross the network — kept as plain types.
 export type OrderFilter = 'all' | 'upcoming' | 'past';
 
 export interface CalendarSharePayload {

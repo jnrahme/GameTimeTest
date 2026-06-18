@@ -6,6 +6,7 @@ import {
   CreditCard,
   MapPin,
   ReceiptText,
+  Tag,
   Ticket,
 } from 'lucide-react-native';
 import { ComponentType, useState } from 'react';
@@ -24,6 +25,7 @@ import { SkeletonBlock } from '../../components/SkeletonBlock';
 import { StatusPill } from '../../components/StatusPill';
 import {
   formatEventDate,
+  formatEventCategory,
   formatMoney,
   formatPayment,
   formatPurchaseDate,
@@ -118,6 +120,7 @@ export function OrderDetailScreen({
           <View style={styles.mainColumn}>
             <ImageBackground
               accessibilityIgnoresInvertColors
+              accessibilityLabel={`${order.event.name} event image`}
               imageStyle={styles.heroImage}
               source={{ uri: order.event.imageUrl }}
               style={[styles.detailHero, isLandscape && styles.detailHeroLandscape]}
@@ -160,6 +163,11 @@ export function OrderDetailScreen({
                 icon={CreditCard}
                 label="Paid with"
                 value={formatPayment(order.payment)}
+              />
+              <InfoTile
+                icon={Tag}
+                label="Category"
+                value={formatEventCategory(order.event.category)}
               />
             </View>
 
@@ -208,7 +216,7 @@ export function OrderDetailScreen({
 
             <View style={styles.shareCard}>
               <View style={styles.shareIconFrame}>
-                <CalendarPlus color={colors.coralDark} size={24} strokeWidth={2.2} />
+                <CalendarPlus color={colors.accent} size={24} strokeWidth={2.2} />
               </View>
               <Text style={styles.shareTitle}>Bring the group in</Text>
               <Text style={styles.shareBody}>
@@ -261,7 +269,7 @@ function InfoTile({
 }) {
   return (
     <View style={styles.infoTile}>
-      <Icon color={colors.coralDark} size={20} strokeWidth={2.2} />
+      <Icon color={colors.accent} size={20} strokeWidth={2.2} />
       <Text style={styles.infoLabel}>{label}</Text>
       <Text numberOfLines={2} style={styles.infoValue}>
         {value}
@@ -518,7 +526,7 @@ const styles = StyleSheet.create({
   },
   shell: {
     gap: spacing.xl,
-    marginHorizontal: 'auto' as never,
+    alignSelf: 'center',
     maxWidth: 1140,
     padding: spacing.lg,
     width: '100%',

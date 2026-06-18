@@ -1,4 +1,5 @@
-import { StyleSheet, View } from 'react-native';
+import { useEffect } from 'react';
+import { BackHandler, StyleSheet, View } from 'react-native';
 
 import { colors } from '../../theme/tokens';
 import { OrderDetailScreen } from './OrderDetailScreen';
@@ -7,8 +8,29 @@ import { useOrdersController } from './useOrdersController';
 
 export function OrdersExperience() {
   const controller = useOrdersController();
+  const isShowingDetail =
+    !!controller.selectedOrder ||
+    controller.isLoadingDetail ||
+    !!controller.detailError;
+  const { closeDetail } = controller;
 
-  if (controller.selectedOrder || controller.isLoadingDetail || controller.detailError) {
+  useEffect(() => {
+    if (!isShowingDetail) {
+      return undefined;
+    }
+
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        closeDetail();
+        return true;
+      },
+    );
+
+    return () => subscription.remove();
+  }, [closeDetail, isShowingDetail]);
+
+  if (isShowingDetail) {
     return (
       <View style={styles.root}>
         <OrderDetailScreen

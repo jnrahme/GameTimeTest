@@ -1,6 +1,12 @@
 import { CalendarSharePayload, Order } from './types';
-import { formatEventDate, formatSeatList } from './formatters';
+import {
+  formatEventDate,
+  formatMoney,
+  formatSeatList,
+  getStatusLabel,
+} from './formatters';
 
+// The prompt model has one event datetime and no end time, so shares assume a 3h event.
 const EVENT_DURATION_HOURS = 3;
 
 export function buildCalendarSharePayload(order: Order): CalendarSharePayload {
@@ -12,7 +18,8 @@ export function buildCalendarSharePayload(order: Order): CalendarSharePayload {
   const description = [
     `GameTime order ${order.confirmationNumber}`,
     formatSeatList(order.seats),
-    `Status: ${order.status}`,
+    `Status: ${getStatusLabel(order.status)}`,
+    `Total: ${formatMoney(order.receipt.total)}`,
   ].join('\n');
 
   const icsContent = [
@@ -39,6 +46,7 @@ export function buildCalendarSharePayload(order: Order): CalendarSharePayload {
       `Join me at ${order.event.name}.`,
       `${formatEventDate(order.event.datetime)} at ${order.event.venue}.`,
       `Seats: ${formatSeatList(order.seats)}.`,
+      `Order total: ${formatMoney(order.receipt.total)}.`,
     ].join(' '),
     icsContent,
   };
