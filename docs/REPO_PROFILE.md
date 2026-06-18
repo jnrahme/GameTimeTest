@@ -30,6 +30,9 @@ https://jnrahme.github.io/GameTimeTest/
 - zod
 - react-navigation
 - tanstack-query
+- expo-image
+- eslint
+- prettier
 
 ## Public Surface Checklist
 
