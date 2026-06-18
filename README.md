@@ -20,6 +20,8 @@ feature branch.
 
 ## Demo Video
 
+[![Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase-poster.jpg)](docs/showcase/gametime-order-history-showcase.mp4)
+
 [Watch the 67-second implementation walkthrough](docs/showcase/gametime-order-history-showcase.mp4).
 It uses the native app screenshots below with ElevenLabs narration to cover the
 purchase timeline, receipt detail, Share with Friends flow, rotation-aware UI,
@@ -33,16 +35,16 @@ take-home prompt: order history, filters/search, detail receipt, calendar
 sharing, and rotation-aware layout. These captures come from the native Expo app
 running in the iPhone 16 iOS Simulator, not from the web preview.
 
-| 1. Order history | 2. Receipt + Share with Friends | 3. Native iOS share |
-| --- | --- | --- |
+| 1. Order history                                                                              | 2. Receipt + Share with Friends                                                                                       | 3. Native iOS share                                                                                                    |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | ![Native iOS GameTime order history list](docs/screenshots/order-history-native-portrait.png) | ![Native iOS GameTime receipt detail with Share with Friends](docs/screenshots/order-detail-native-receipt-share.png) | ![Native iOS share sheet with generated calendar event text](docs/screenshots/order-detail-native-ios-share-sheet.png) |
 
-| Search empty state | Past purchases filter | Shared confirmation |
-| --- | --- | --- |
+| Search empty state                                                                                              | Past purchases filter                                                                                   | Shared confirmation                                                                                        |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | ![Native iOS GameTime order history empty search state](docs/screenshots/order-history-native-empty-search.png) | ![Native iOS GameTime order history past filter](docs/screenshots/order-history-native-past-filter.png) | ![Native iOS GameTime detail after share completes](docs/screenshots/order-detail-native-shared-state.png) |
 
-| Rotation-aware landscape layout |
-| --- |
+| Rotation-aware landscape layout                                                                            |
+| ---------------------------------------------------------------------------------------------------------- |
 | ![Native iOS GameTime order history landscape layout](docs/screenshots/order-history-native-landscape.png) |
 
 ## Assessment Evidence
@@ -50,15 +52,15 @@ running in the iPhone 16 iOS Simulator, not from the web preview.
 The attached PDF asks for an order history experience with these points. This
 repo proves each one directly in the product surface, source, and tests.
 
-| PDF requirement | Where it is proven |
-| --- | --- |
-| Display a list of the user's past purchases | The order timeline is shown in the order history screenshots above. Implementation: [OrdersListScreen.tsx](src/features/orders/OrdersListScreen.tsx), [OrderCard.tsx](src/features/orders/OrderCard.tsx), and [mockOrders.ts](src/data/mockOrders.ts). |
-| Tapping a purchase opens a detail screen | The receipt detail screenshot shows the selected order path. Implementation: [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx) handles selection and back navigation; [OrderDetailScreen.tsx](src/features/orders/OrderDetailScreen.tsx) renders the detail view. |
-| Detail includes event name and information | The detail screen shows the event name, venue, date, category, confirmation, payment, and seats. Formatting is centralized in [formatters.ts](src/domain/orders/formatters.ts). |
-| Detail includes receipt with price breakdown | The receipt screenshot shows subtotal, fees, tax, discount when present, and total. Implementation: [ReceiptRow.tsx](src/components/ReceiptRow.tsx) and `getReceiptLineItems` in [formatters.ts](src/domain/orders/formatters.ts). |
+| PDF requirement                               | Where it is proven                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Display a list of the user's past purchases   | The order timeline is shown in the order history screenshots above. Implementation: [OrdersListScreen.tsx](src/features/orders/OrdersListScreen.tsx), [OrderCard.tsx](src/features/orders/OrderCard.tsx), and [mockOrders.ts](src/data/mockOrders.ts).                                                                                                                                  |
+| Tapping a purchase opens a detail screen      | The receipt detail screenshot shows the selected order path. Implementation: [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx) handles selection and back navigation; [OrderDetailScreen.tsx](src/features/orders/OrderDetailScreen.tsx) renders the detail view.                                                                                                        |
+| Detail includes event name and information    | The detail screen shows the event name, venue, date, category, confirmation, payment, and seats. Formatting is centralized in [formatters.ts](src/domain/orders/formatters.ts).                                                                                                                                                                                                         |
+| Detail includes receipt with price breakdown  | The receipt screenshot shows subtotal, fees, tax, discount when present, and total. Implementation: [ReceiptRow.tsx](src/components/ReceiptRow.tsx) and `getReceiptLineItems` in [formatters.ts](src/domain/orders/formatters.ts).                                                                                                                                                      |
 | Share with Friends generates a calendar event | The native receipt screenshot shows the CTA, the native iOS share sheet screenshot shows the generated event text, and the shared-state screenshot shows the completed action. Implementation: [calendar.ts](src/domain/orders/calendar.ts) builds the ICS payload and [shareCalendar.ts](src/services/shareCalendar.ts) sends it to native/web share surfaces with clipboard fallback. |
-| Simulate network calls with mock data | [ordersApi.ts](src/services/ordersApi.ts) simulates `GET /orders` and `GET /orders/:orderId` with latency, failure states, and Zod response validation from [schema.ts](src/domain/orders/schema.ts). |
-| Include test coverage | Tests cover selectors, formatting, calendar generation, mock API validation, query hooks, route containers, list/detail UI, share fallback, and the app shell. Run `make verify` for TypeScript plus Jest coverage gates. |
+| Simulate network calls with mock data         | [ordersApi.ts](src/services/ordersApi.ts) simulates `GET /orders` and `GET /orders/:orderId` with latency, failure states, and Zod response validation from [schema.ts](src/domain/orders/schema.ts).                                                                                                                                                                                   |
+| Include test coverage                         | Tests cover selectors, formatting, calendar generation, mock API validation, query hooks, route containers, list/detail UI, share fallback, and the app shell. Run `make verify` for TypeScript plus Jest coverage gates.                                                                                                                                                               |
 
 ## Implementation Showcase
 
@@ -153,15 +155,15 @@ flowchart LR
 
 ## Architecture Decisions
 
-| Decision | Why it exists | Where to inspect |
-| --- | --- | --- |
-| Expo SDK 56 on Node 22 | Matches the current React Native stack while keeping setup repeatable with `nvm use`. | [.nvmrc](.nvmrc), [package.json](package.json), [app.json](app.json) |
-| React Navigation native stack | The prompt has two real screens. A navigator gives route params, Android hardware back, iOS swipe-back, and deep-link readiness without custom back-stack code. | [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx), [navigation.ts](src/features/orders/navigation.ts) |
-| TanStack Query for server state | Orders are fetched data with cache, retry, refetch, stale-time, loading, and error semantics. Query owns that; containers keep only local UI state. | [App.tsx](App.tsx), [queries.ts](src/features/orders/queries.ts) |
-| Containers separate behavior from rendering | Containers read routes and queries, derive filtered data, and pass plain props to screens. Screens stay testable and presentation-focused. | [OrdersListContainer.tsx](src/features/orders/OrdersListContainer.tsx), [OrderDetailContainer.tsx](src/features/orders/OrderDetailContainer.tsx) |
-| Zod at the mock API boundary | Mock data is treated like real backend data: it is validated before reaching the UI, and TypeScript types are inferred from the schemas. | [schema.ts](src/domain/orders/schema.ts), [ordersApi.ts](src/services/ordersApi.ts) |
-| FlashList for the timeline | Order history is a list surface that can grow. Virtualization is included now so the implementation scales beyond seed data. | [OrdersListScreen.tsx](src/features/orders/OrdersListScreen.tsx) |
-| Native share with web fallback | The primary experience is mobile. Web preview still behaves reasonably through `navigator.share` or clipboard fallback. | [calendar.ts](src/domain/orders/calendar.ts), [shareCalendar.ts](src/services/shareCalendar.ts) |
+| Decision                                    | Why it exists                                                                                                                                                   | Where to inspect                                                                                                                                 |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Expo SDK 56 on Node 22                      | Matches the current React Native stack while keeping setup repeatable with `nvm use`.                                                                           | [.nvmrc](.nvmrc), [package.json](package.json), [app.json](app.json)                                                                             |
+| React Navigation native stack               | The prompt has two real screens. A navigator gives route params, Android hardware back, iOS swipe-back, and deep-link readiness without custom back-stack code. | [OrdersExperience.tsx](src/features/orders/OrdersExperience.tsx), [navigation.ts](src/features/orders/navigation.ts)                             |
+| TanStack Query for server state             | Orders are fetched data with cache, retry, refetch, stale-time, loading, and error semantics. Query owns that; containers keep only local UI state.             | [App.tsx](App.tsx), [queries.ts](src/features/orders/queries.ts)                                                                                 |
+| Containers separate behavior from rendering | Containers read routes and queries, derive filtered data, and pass plain props to screens. Screens stay testable and presentation-focused.                      | [OrdersListContainer.tsx](src/features/orders/OrdersListContainer.tsx), [OrderDetailContainer.tsx](src/features/orders/OrderDetailContainer.tsx) |
+| Zod at the mock API boundary                | Mock data is treated like real backend data: it is validated before reaching the UI, and TypeScript types are inferred from the schemas.                        | [schema.ts](src/domain/orders/schema.ts), [ordersApi.ts](src/services/ordersApi.ts)                                                              |
+| FlashList for the timeline                  | Order history is a list surface that can grow. Virtualization is included now so the implementation scales beyond seed data.                                    | [OrdersListScreen.tsx](src/features/orders/OrdersListScreen.tsx)                                                                                 |
+| Native share with web fallback              | The primary experience is mobile. Web preview still behaves reasonably through `navigator.share` or clipboard fallback.                                         | [calendar.ts](src/domain/orders/calendar.ts), [shareCalendar.ts](src/services/shareCalendar.ts)                                                  |
 
 ## AI-Assisted Delivery Model
 
